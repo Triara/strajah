@@ -4,8 +4,9 @@
   "description": "security layer",
   "main": "lib/strajah.js",
   "scripts": {
-    "test": "npm run-script mocha",
-    "mocha": "./node_modules/mocha/bin/mocha tests -u tdd --reporter spec"
+    "test": "npm run-script mocha && npm run-script cucumber",
+    "mocha": "./node_modules/mocha/bin/mocha tests -u tdd --reporter spec",
+    "cucumber": "./node_modules/cucumber/bin/cucumber.js features -f pretty"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   },
   "homepage": "https://github.com/strajah/strajah",
   "devDependencies": {
+    "cucumber": "^0.4.7",
     "mocha": "^2.1.0",
     "request": "^2.53.0",
     "restify": "^2.8.5",

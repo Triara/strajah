@@ -17,7 +17,7 @@ after_success:
   - git config --global user.email "bot@strajah.com"
   - git config --global user.name "Strajah Bot"
   - export GIT_TAG=b$TRAVIS_BUILD_NUMBER
-  - echo -n $GIT_TAG > public/version
-  - git commit -m "Set build VERSION number" public/version
+  - echo -n $GIT_TAG > version
+  - git commit -m "Set build VERSION number" version
   - git tag $GIT_TAG -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
   - git push --quiet https://$GITHUBKEY@github.com/strajah/strajah.git $GIT_TAG > /dev/null 2>&1

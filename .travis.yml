@@ -11,3 +11,13 @@ deploy:
     tags: true
     repo: strajah/strajah
     all_branches: true
+
+after_success:
+  # CREATE GIT TAG
+  - git config --global user.email "bot@strajah.com"
+  - git config --global user.name "Strajah Bot"
+  - export GIT_TAG=b$TRAVIS_BUILD_NUMBER
+  - echo -n $GIT_TAG > public/version
+  - git commit -m "Set build VERSION number" public/version
+  - git tag $GIT_TAG -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
+  - git push --quiet https://$GITHUBKEY@github.com/strajah/strajah.git $GIT_TAG > /dev/null 2>&1

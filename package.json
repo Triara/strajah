@@ -5,8 +5,8 @@
   "main": "lib/strajah.js",
   "scripts": {
     "test": "npm run-script mocha && npm run-script cucumber",
-    "mocha": "./node_modules/mocha/bin/mocha tests -u tdd --reporter spec",
-    "cucumber": "./node_modules/cucumber/bin/cucumber.js features -f pretty"
+    "mocha": "./node_modules/mocha/bin/mocha --harmony tests -u tdd --reporter spec",
+    "cucumber": "node --harmony ./node_modules/cucumber/bin/cucumber.js features -f pretty"
   },
   "repository": {
     "type": "git",

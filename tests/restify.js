@@ -1,15 +1,17 @@
-var assert = require('assert');
-var request = require('request');
-var restify = require('restify');
+'use strict';
 
-var strajah = require('../lib/strajah.js');
-var errors = require('../lib/errors.js');
+let assert = require('assert');
+let request = require('request');
+let restify = require('restify');
+
+let strajah = require('../lib/strajah.js');
+let errors = require('../lib/errors.js');
 
 describe('compatibility',function(){
     describe('restify', function(){
 
         it('private',function(done){
-            var server = restify.createServer({
+            let server = restify.createServer({
                 name: 'restify-test-server'
             });
 
@@ -19,7 +21,7 @@ describe('compatibility',function(){
                 next();
             });
             server.listen(3000, function(){
-                var options = {
+                let options = {
                     url: 'http://localhost:3000/private',
                     headers: {},
                     method: 'GET'
@@ -37,12 +39,12 @@ describe('compatibility',function(){
         });
 
         it('public',function(done){
-            var server = restify.createServer({
+            let server = restify.createServer({
                 name: 'restify-test-server'
             });
 
-            var options = {
-                public : [
+            let options = {
+                public: [
                     {
                         path: '/public',
                         methods: 'GET'
@@ -51,7 +53,7 @@ describe('compatibility',function(){
                 ]
             };
 
-            var expectedBody = {validbody:true};
+            let expectedBody = {validbody: true};
 
             server.use(strajah(options));
             server.get('/public', function(req,res,next){
@@ -59,7 +61,7 @@ describe('compatibility',function(){
                 next();
             });
             server.listen(3000, function(){
-                var options = {
+                let options = {
                     url: 'http://localhost:3000/public',
                     method: 'GET'
                 };

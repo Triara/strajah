@@ -1,15 +1,16 @@
-var assert = require('assert');
-var request = require('request');
-var sinon = require('sinon');
+'use strict';
 
-var errors = require('../lib/errors.js');
+let assert = require('assert');
+let request = require('request');
+let sinon = require('sinon');
+
+let errors = require('../lib/errors.js');
 
 describe('middleware',function(){
 
     describe('basic usage', function(){
-
-        var fakeReq = {};
-        var fakeRes = {};
+        let fakeReq;
+        let fakeRes;
 
         beforeEach(function(){
             fakeReq = {};
@@ -21,7 +22,7 @@ describe('middleware',function(){
         it('private', function(done){
             sinon.mock(fakeRes).expects('send').once().withArgs(403,errors.forbidden);
 
-            var strajah = require('../lib/strajah.js')();
+            let strajah = require('../lib/strajah.js')();
             strajah(fakeReq, fakeRes, function(canContinue){
                 assert.equal(canContinue, false);
                 done();
@@ -32,7 +33,7 @@ describe('middleware',function(){
             fakeReq.url = '/public';
             sinon.mock(fakeRes).expects('send').never();
 
-            var options = {
+            let options = {
                 public : [
                     {
                         path: "/public",
@@ -41,7 +42,7 @@ describe('middleware',function(){
                 ]
             };
 
-            var strajah = require('../lib/strajah.js')(options);
+            let strajah = require('../lib/strajah.js')(options);
             strajah(fakeReq, fakeRes, function(canContinue){
                 assert.equal(canContinue, true);
                 done();

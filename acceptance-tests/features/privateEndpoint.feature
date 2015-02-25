@@ -1,7 +1,7 @@
 Feature: Simple private setup
 
   Scenario: Private Endpoint
-    Given strajah has default options
+    Given strajah has default settings
     When a client makes a 'GET' request to '/private' endpoint
     Then the response status code is 403
     And the response body must be '{"err":"forbidden", "des":"you are not authorized to access this path"}'

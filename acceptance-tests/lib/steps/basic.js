@@ -1,6 +1,6 @@
 var assert = require('assert');
 var world = require('../support/world.js');
-var strajah = require('../../lib/strajah.js');
+var strajah = require('../../../lib/strajah.js');
 
 module.exports = function(){
     this.Given(/^strajah has default options$/, function (callback) {

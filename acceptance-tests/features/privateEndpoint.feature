@@ -1,4 +1,4 @@
-Feature: Simple public/private setup
+Feature: Simple private setup
 
   Scenario: Private Endpoint
     Given strajah has default options

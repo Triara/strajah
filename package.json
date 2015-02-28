@@ -4,6 +4,7 @@
   "description": "security layer",
   "main": "lib/strajah.js",
   "scripts": {
+    "start": "node --harmony src/index.js",
     "test": "npm run-script mocha && npm run-script cucumber",
     "mocha": "./node_modules/.bin/grunt mochacli",
     "cucumber": "node --harmony node_modules/.bin/grunt cucumber"
@@ -34,6 +35,7 @@
   },
   "dependencies": {
     "debug": "^2.1.1",
-    "lodash": "^3.1.0"
+    "lodash": "^3.1.0",
+    "q": "1.1.2"
   }
 }

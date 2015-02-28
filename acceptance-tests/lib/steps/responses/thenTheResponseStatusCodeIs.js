@@ -1,11 +1,11 @@
 'use strict';
 
-const world = require('../../support/world.js');
+const requestSetter = require('../../support/requestSetter.js');
 require('chai').should();
 
 module.exports = function () {
     this.Then(/^the response status code is (\d+)$/, function (statusCode, done) {
-        parseInt(statusCode).should.eql(world.res.statusCode);
+        parseInt(statusCode).should.eql(requestSetter.res.statusCode);
         done();
     });
 };

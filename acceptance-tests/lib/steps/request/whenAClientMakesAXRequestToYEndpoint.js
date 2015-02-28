@@ -1,14 +1,14 @@
 'use strict';
 
-const world = require('../../support/world.js');
+const requestSetter = require('../../support/requestSetter.js');
 
 module.exports = function () {
     this.When(/^a client makes a '(.*)' request to '(.*)' endpoint$/, function (method, path, done) {
-        world.req.url = path;
-        world.req.method = method;
+        requestSetter.req.url = path;
+        requestSetter.req.method = method;
 
-        world.strajah(world.req, world.res, function(canContinue){
-            world.chainCanContinue = canContinue;
+        requestSetter.strajah(requestSetter.req, requestSetter.res, function(canContinue){
+            requestSetter.chainCanContinue = canContinue;
             done();
         });
     });

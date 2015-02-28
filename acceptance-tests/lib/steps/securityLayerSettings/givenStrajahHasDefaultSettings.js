@@ -1,11 +1,11 @@
 'use strict';
 
-const world = require('../../support/world.js'),
+const requestSetter = require('../../support/requestSetter.js'),
     strajah = require('../../../../lib/strajah.js');
 
 module.exports = function () {
     this.Given(/^strajah has default settings/, function (done) {
-        world.strajah = strajah({});
+        requestSetter.strajah = strajah({});
         done();
     });
 };

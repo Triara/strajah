@@ -1,11 +1,11 @@
 'use strict';
 
-const world = require('../../support/world.js');
+const requestSetter = require('../../support/requestSetter.js');
 require('chai').should();
 
 module.exports = function () {
     this.Then(/^the request can continue$/, function (done) {
-        world.chainCanContinue.should.be.false;
+        requestSetter.chainCanContinue.should.be.false;
         done();
     });
 };

@@ -10,4 +10,7 @@ Feature: Registration for a new customer
       | user name | password |
       | Ironman   | Av3ng3Rs |
     Then the response code must be 201
+    And the customer is able to log in with his credentials
+      | user name | password |
+      | Ironman   | Av3ng3Rs |
     

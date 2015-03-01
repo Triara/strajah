@@ -5,7 +5,7 @@ const request = require('request'),
     _ = require('lodash');
 
 module.exports = function () {
-    this.When(/^a not registrated user requests to register with data$/, function (registrationDataTable, done) {
+    this.When(/^a not registered user requests to register with data$/, function (registrationDataTable, done) {
         let registrationData = registrationDataTable.hashes()[0];
 
         request({

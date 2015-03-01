@@ -1,3 +1,5 @@
+#language: en
+
 Feature: Registration for a new customer
   In order to access private endpoints
   As a potential customer
@@ -7,4 +9,4 @@ Feature: Registration for a new customer
     When a not registered user requests to register with data
     | user name | password |
     | Ironman   | Av3ng3Rs |
-    Then strajah sends the user back a "201" status code
+    Then the response code must be 201

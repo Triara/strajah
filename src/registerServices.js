@@ -1,7 +1,8 @@
 'use strict';
 
 const modules = [
-    require('./registration')
+    require('./registration'),
+    require('./heartbeat')
 ];
 
 module.exports = registerServices;

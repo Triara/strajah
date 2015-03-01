@@ -23,6 +23,6 @@ module.exports = function () {
 function saveRequestResponse(world, done, error, response) {
     should.not.exist(error);
 
-    world.publishValue('response', response);
+    world.publishValue('statusCode', response.statusCode);
     done();
 }

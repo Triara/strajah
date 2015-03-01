@@ -25,7 +25,7 @@ function start (server, port, callback){
     });
 }
 
-function stop (server,callback){
+function stop (server, callback){
     server.close(function(){
         callback();
     });

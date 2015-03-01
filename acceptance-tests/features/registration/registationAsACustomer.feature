@@ -13,4 +13,16 @@ Feature: Registration for a new customer
     And the customer is able to log in with his credentials
       | user name | password |
       | Ironman   | Av3ng3Rs |
-    
+
+
+    Scenario: Unsuccessful registration - already registered customer with the same name
+      Given a registered customer with data
+        | user name | password |
+        | Ironman   | Av3ng3Rs |
+      When a not registered user requests to register with data
+        | user name | password     |
+        | Ironman   | I'm a clon!  |
+      Then the response code must be 401
+      And the customer is not able to log in with his credentials
+        | user name | password     |
+        | Ironman   | I'm a clon!  |

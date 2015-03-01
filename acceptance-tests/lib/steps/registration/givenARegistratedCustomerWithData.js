@@ -6,7 +6,7 @@ const request = require('request'),
     _ = require('lodash');
 
 module.exports = function () {
-    this.Given(/^a registrated customer with data$/, function (registrationDataTable, done) {
+    this.Given(/^a registered customer with data$/, function (registrationDataTable, done) {
         let registrationData = registrationDataTable.hashes()[0];
 
         request({
@@ -22,8 +22,6 @@ module.exports = function () {
 };
 
 function saveResponse(world, done, error, response) {
-    should.not.exist(error);
-
     world.publishValue('statusCode', response.statusCode);
     done();
 }

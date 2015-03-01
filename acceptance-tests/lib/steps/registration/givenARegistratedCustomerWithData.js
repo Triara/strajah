@@ -6,7 +6,7 @@ const request = require('request'),
     _ = require('lodash');
 
 module.exports = function () {
-    this.When(/^a not registered user requests to register with data$/, function (registrationDataTable, done) {
+    this.Given(/^a registrated customer with data$/, function (registrationDataTable, done) {
         let registrationData = registrationDataTable.hashes()[0];
 
         request({
@@ -17,11 +17,11 @@ module.exports = function () {
                 'name': registrationData['user name'],
                 'password': registrationData['password']
             }
-        }, _.partial(saveRequestResponse, this, done));
+        }, _.partial(saveResponse, this, done));
     });
 };
 
-function saveRequestResponse(world, done, error, response) {
+function saveResponse(world, done, error, response) {
     should.not.exist(error);
 
     world.publishValue('statusCode', response.statusCode);

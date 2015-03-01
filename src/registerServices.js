@@ -2,7 +2,8 @@
 
 const modules = [
     require('./registration'),
-    require('./heartbeat')
+    require('./heartbeat'),
+    require('./login')
 ];
 
 module.exports = registerServices;

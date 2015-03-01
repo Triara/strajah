@@ -9,7 +9,7 @@ describe('Heartbeat status', function(){
         let obtainedStatusCode;
 
         let res = {
-            send: function(value, body){
+            send: function(value){
                 obtainedStatusCode = value;
             }
         };

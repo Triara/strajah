@@ -2,6 +2,7 @@
 
 const _ = require('lodash'),
     should = require('chai').should(),
+    testConfig = require('../../testConfig.js'),
     request = require('request');
 
 module.exports = whenRequestHeartbeatStep;
@@ -10,7 +11,7 @@ module.exports = whenRequestHeartbeatStep;
 function whenRequestHeartbeatStep() {
     this.When(/^I request the heartbeat$/, function (done) {
         request({
-                url: 'http://localhost:3000/api/heartbeat',
+                url: testConfig.publicHost + ':' + testConfig.publicPort + '/api/heartbeat',
                 method: 'GET'
             }
             , _.partial(saveResponse, this, done));

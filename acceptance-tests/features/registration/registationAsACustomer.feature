@@ -26,3 +26,10 @@ Feature: Registration for a new customer
       And the customer is not able to log in with his credentials
         | user name | password     |
         | Ironman   | I'm a clon!  |
+
+
+  Scenario: Unsuccessful registration - missing user name
+    When a not registered user requests to register with data
+      | user name | password |
+      |           | Av3ng3Rs |
+    Then the response code must be 400

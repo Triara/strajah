@@ -33,3 +33,10 @@ Feature: Registration for a new customer
       | user name | password |
       |           | Av3ng3Rs |
     Then the response code must be 400
+
+
+  Scenario: Unsuccessful registration - missing password
+    When a not registered user requests to register with data
+      | user name | password |
+      | Ironman   |          |
+    Then the response code must be 400

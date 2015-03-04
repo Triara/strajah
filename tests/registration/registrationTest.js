@@ -151,6 +151,39 @@ describe('Registration route should be available', function () {
         return fulfilledPromise;
     });
 
+    it('Should return 400 when missing \'password\' property in the body request', function () {
+        const request = mockRequest();
+        delete request.body.password;
+
+        const response = mockResponse();
+
+        let deferred = q.defer();
+        let promise = deferred.promise;
+
+        let retrieveFromStorageStub = sinon.stub();
+        retrieveFromStorageStub.returns(promise);
+
+        let storageSpy = sinon.spy();
+        let responseSpy = sinon.spy(response, 'json');
+
+        let registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, storageSpy);
+        registrationMiddleware(request, response, function () {});
+
+        let fulfilledPromise = promise.then(function () {
+            responseSpy.calledOnce.should.be.true;
+
+            let statusCode = responseSpy.args[0][0];
+            should.exist(statusCode);
+            statusCode.should.deep.equal(400);
+
+            let body = responseSpy.args[0][1];
+            should.exist(body);
+        });
+
+        deferred.resolve();
+
+        return fulfilledPromise;
+    });
 
     afterEach(function () {
         mockery.deregisterAll();

@@ -11,6 +11,11 @@ module.exports = function (request, response, next) {
             return next();
         }
 
+        if (_.isEmpty(request.body.password)) {
+            response.json(400, 'missing password property');
+            return next();
+        }
+
         let filteredCustomers = _.filter(customers, function (retrievedCustomer) {
             return retrievedCustomer.name === request.body.name;
         });

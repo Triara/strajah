@@ -1,6 +1,8 @@
 'use strict';
 
-const _ = require('lodash');
+const _ = require('lodash'),
+    serverInstance = require('../serverInstance.js');
+
 
 const World = function (callback) {
 
@@ -8,7 +10,8 @@ const World = function (callback) {
 
     callback({
         publishValue: publishValue,
-        getValue: getValue
+        getValue: getValue,
+        serverInstance: serverInstance
     });
 
     function publishValue(name, value) {

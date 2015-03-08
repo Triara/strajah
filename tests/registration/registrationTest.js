@@ -106,14 +106,14 @@ describe('Registration route should be available', function () {
         retrieveFromStorageStub.returns(promise);
 
         let storageMock = sinon.mock();
-        storageMock.withArgs({name: request.body.name, password: request.body.password});
 
         let registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, storageMock);
         registrationMiddleware(request, response, function () {});
 
         deferred.resolve();
-        promise.then(function () {
-            storageMock.verify();
+        return promise.then(function () {
+            storageMock.called.should.be.true;
+            storageMock.args[0][0].should.deep.equal({name: request.body.name, password: request.body.password});
         });
     });
 

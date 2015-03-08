@@ -5,13 +5,14 @@ const strajah = require('../../src/server.js'),
     registerServices = require('../../src/registerServices.js'),
     _ = require('lodash');
 
-
 module.exports = (function () {
-    let serverInstance = strajah.create();
+    let serverInstance;
 
     return {
-        registerServices: function () {
-            registerServices(serverInstance);
+        registerServices: function (customProxyConfig) {
+            serverInstance = strajah.create();
+
+            registerServices(serverInstance, customProxyConfig);
         },
         start: function (done) {
             strajah.start(serverInstance, config.publicPort, done);

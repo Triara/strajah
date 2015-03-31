@@ -1,21 +1,12 @@
 'use strict';
 
-const request = require('request'),
-    testConfig = require('../../testConfig.js'),
-    should = require('chai').should(),
+const should = require('chai').should(),
+    customerLogin = require('../../login/customerLogsIn.js'),
     _ = require('lodash');
 
 module.exports = function () {
     this.When(/^the customer "([^"]*)" logs in with password "([^"]*)"$/, function (customerName, password, done) {
-        request({
-            uri: testConfig.publicHost + ':' + testConfig.publicPort + '/api/auth/login',
-            method: 'POST',
-            json: true,
-            body: {
-                'name': customerName,
-                'password': password
-            }
-        }, _.partial(saveResponse, this, done));
+        customerLogin(customerName, password, _.partial(saveResponse, this, done));
     });
 };
 

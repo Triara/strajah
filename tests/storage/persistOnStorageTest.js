@@ -5,17 +5,17 @@ const _ = require('lodash'),
     mockery = require('mockery');
 require('chai').should();
 
-describe('Persist on storage', function () {
-    it('Should be a function', function(){
+describe('Persist on storage', () => {
+    it('Should be a function', () => {
         let databaseSpy = sinon.spy();
         let persistOnStorage = createPersistOnStorage(databaseSpy);
 
-        _.isFunction(persistOnStorage).should.be.true;
+        _.isFunction(persistOnStorage).should.equal(true);
     });
 
-    it('Should call the db publishValue method', function () {
+    it('Should call the db publishValue method', () => {
         let databaseStub = {
-            publishValue: function () {}
+            publishValue: () => {}
         };
 
         let databaseSpy = sinon.spy(databaseStub, 'publishValue');
@@ -25,11 +25,11 @@ describe('Persist on storage', function () {
         const dataToPersist = {some: 'data'};
         persistOnStorage(dataToPersist);
 
-        databaseSpy.calledOnce.should.be.true;
+        databaseSpy.calledOnce.should.equal(true);
         databaseSpy.args[0][0].should.deep.equal(dataToPersist);
     });
 
-    afterEach(function () {
+    afterEach(() => {
         mockery.deregisterAll();
         mockery.disable();
     });

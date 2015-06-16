@@ -9,8 +9,8 @@ const should = require('chai').should(),
 require('chai').should();
 
 
-describe('Protected paths', function () {
-    it('must call the next function', function(){
+describe('Protected paths', () => {
+    it('must call the next function', () => {
         const request = mockRequest(),
             response = mockResponse();
 
@@ -20,7 +20,7 @@ describe('Protected paths', function () {
         let nextMock = sinon.mock();
         nextMock.once();
 
-        let requestStub = function (options, callback) {
+        let requestStub = (options, callback) => {
             callback();
         };
 
@@ -31,12 +31,12 @@ describe('Protected paths', function () {
 
         deferred.resolve();
 
-        return promise.then(function () {
+        return promise.then(() => {
             nextMock.verify();
         });
     });
 
-    it('should forward requests to protected paths', function () {
+    it('should forward requests to protected paths', () => {
         const request = mockRequest(),
             response = mockResponse();
 
@@ -51,18 +51,18 @@ describe('Protected paths', function () {
         let proxy = createProxyMiddleware(requestMock);
 
         let proxyMiddleware = _.partial(proxy, proxyConfigWithValidPath);
-        proxyMiddleware(request, response, function () {});
+        proxyMiddleware(request, response, () => {});
 
         deferred.resolve();
-        return promise.then(function () {
-            requestMock.called.should.be.true;
+        return promise.then(() => {
+            requestMock.called.should.equal(true);
             requestMock.args[0][0].url.should.deep.equal(request.url);
             requestMock.args[0][0].body.should.deep.equal(request.body);
             requestMock.args[0][0].method.should.deep.equal(request.method);
         });
     });
 
-    it('should not forward not protected paths', function () {
+    it('should not forward not protected paths', () => {
         const request = mockRequest(),
             response = mockResponse();
         let responseSpy = sinon.spy(response, 'json');
@@ -78,11 +78,11 @@ describe('Protected paths', function () {
         let proxy = createProxyMiddleware(requestMock);
 
         let proxyMiddleware = _.partial(proxy, proxyConfigWithInvalidPath);
-        proxyMiddleware(request, response, function () {});
+        proxyMiddleware(request, response, () => {});
 
         deferred.resolve();
-        return promise.then(function () {
-            requestMock.called.should.be.false;
+        return promise.then(() => {
+            requestMock.called.should.equal(false);
             let statusCode = responseSpy.args[0][0];
             should.exist(statusCode);
             statusCode.should.deep.equal(403);
@@ -91,7 +91,7 @@ describe('Protected paths', function () {
 
 
 
-    afterEach(function () {
+    afterEach(() => {
         mockery.deregisterAll();
         mockery.disable();
     });
@@ -111,7 +111,7 @@ function mockRequest () {
 
 function mockResponse() {
     return {
-        json: function () {}
+        json: () => {}
     };
 }
 

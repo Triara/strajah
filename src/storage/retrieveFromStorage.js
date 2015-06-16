@@ -3,6 +3,6 @@
 const q = require('q'),
     database = require('./ancientStorage.js');
 
-module.exports = function () {
+module.exports = () => {
     return q(database.getValue());
 };

@@ -4,8 +4,8 @@ const retrieveCustomers = require('./../storage/retrieveFromStorage.js'),
     persistOnStorage = require('./../storage/persistOnStorage.js'),
     _ = require('lodash');
 
-module.exports = function (request, response, next) {
-    retrieveCustomers().then(function (customers) {
+module.exports = (request, response, next) => {
+    retrieveCustomers().then(customers => {
         if (_.isEmpty(request.body.name)) {
             response.json(400, 'missing name property');
             return next();
@@ -16,7 +16,7 @@ module.exports = function (request, response, next) {
             return next();
         }
 
-        let filteredCustomers = _.filter(customers, function (retrievedCustomer) {
+        let filteredCustomers = _.filter(customers, retrievedCustomer => {
             return retrievedCustomer.name === request.body.name;
         });
 

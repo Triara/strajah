@@ -29,6 +29,6 @@ const World = function (callback) {
     }
 };
 
-module.exports = function () {
+module.exports = () => {
     this.World = World;
 };

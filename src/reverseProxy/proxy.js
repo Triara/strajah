@@ -6,7 +6,7 @@ const request = require('request'),
 module.exports = proxy;
 
 function proxy(proxyConfig, incommingRequest, response, next) {
-    let foundCoincidences = _.filter(proxyConfig.paths, function (protectedUri) {
+    let foundCoincidences = _.filter(proxyConfig.paths, protectedUri => {
         return protectedUri.path === incommingRequest.url;
     });
 

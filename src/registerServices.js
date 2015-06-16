@@ -12,8 +12,8 @@ const reverseProxy = require('./reverseProxy');
 module.exports = registerServices;
 
 function registerServices(server, proxyCustomConfig) {
-    modules.forEach(function (mod) {
-        mod.registerIn(server);
+    modules.forEach(module => {
+        module.registerIn(server);
     });
     reverseProxy.registerIn(server, proxyCustomConfig);
 }

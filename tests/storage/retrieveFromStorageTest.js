@@ -4,36 +4,36 @@ const should = require('chai').should(),
     mockery = require('mockery');
 
 
-describe('Retrieve all entries from storage', function () {
-    it('Should return a promise', function () {
+describe('Retrieve all entries from storage', () => {
+    it('Should return a promise', () => {
         let databaseStub = {
-            getValue: function () {
+            getValue: () => {
                 return 'storedData';
             }
         };
-        let retrieveFromStorage = createRetrieveFromStorage(databaseStub);
-        let promise = retrieveFromStorage();
+        const retrieveFromStorage = createRetrieveFromStorage(databaseStub);
+        const promise = retrieveFromStorage();
 
         should.exist(promise);
     });
 
-    it('Should return retrieved data' , function (done) {
+    it('Should return retrieved data' , done => {
         let storedData = 'store me';
         let databaseStub = {
-            getValue: function () {
+            getValue: () => {
                 return storedData;
             }
         };
 
         let retrieveFromStorage = createRetrieveFromStorage(databaseStub);
-        retrieveFromStorage().then(function (retrievedData){
-            retrievedData.should.not.be.undefined;
+        retrieveFromStorage().then(retrievedData => {
+            retrievedData.should.not.equal(undefined);
             retrievedData.should.deep.equal(storedData);
             done();
         });
     });
 
-    afterEach(function () {
+    afterEach(() => {
         mockery.deregisterAll();
         mockery.disable();
     });

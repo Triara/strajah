@@ -2,6 +2,6 @@
 
 const database = require('./ancientStorage.js');
 
-module.exports = function (dataToPersist) {
+module.exports = dataToPersist => {
     database.publishValue(dataToPersist);
 };

@@ -20,13 +20,13 @@ function create(){
 }
 
 function start (server, port, callback){
-    server.listen(port, function(){
+    server.listen(port, () => {
         callback();
     });
 }
 
 function stop (server, callback){
-    server.close(function(){
+    server.close(() => {
         callback();
     });
 }

@@ -8,6 +8,6 @@ const server = require('./server.js'),
 let serverInstance = server.create();
 registerServices(serverInstance);
 
-server.start(serverInstance, config.publicPort, function (){
+server.start(serverInstance, config.publicPort, () => {
     console.log('\n Up and running');
 });

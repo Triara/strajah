@@ -4,8 +4,8 @@ const config = require('../../../../src/reverseProxy/proxyConfig.js'),
     _ = require('lodash');
 
 
-module.exports = function () {
-    this.Given(/^strajah is protecting the following path$/, function (protectedPathsTable, done) {
+module.exports = () => {
+    this.Given(/^strajah is protecting the following path$/, (protectedPathsTable, done) => {
         let protectedPaths = protectedPathsTable.hashes()[0];
 
         let customProxyConfig = _.cloneDeep(config);

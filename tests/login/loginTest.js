@@ -7,8 +7,8 @@ const mockery = require('mockery'),
 require('chai').should();
 
 
-describe('Login response code', function(){
-    it('must call the next function', function(){
+describe('Login response code', () => {
+    it('must call the next function', () => {
         const request = mockRequest(),
             response = mockResponse();
 
@@ -26,12 +26,12 @@ describe('Login response code', function(){
 
         deferred.resolve(createStorageResponse(request));
 
-        promise.then(function () {
+        promise.then(() => {
             nextMock.verify();
         });
     });
 
-    it('must send back a response', function(){
+    it('must send back a response', () => {
         const request = mockRequest(),
             response = mockResponse();
         let responseSpy = sinon.spy(response, 'json');
@@ -43,9 +43,9 @@ describe('Login response code', function(){
         storageStub.returns(promise);
 
         let loginMiddleware = createLoginMiddleware(storageStub);
-        loginMiddleware(request, response, function () {});
+        loginMiddleware(request, response, () => {});
 
-        let fulfilledPromise = promise.then(function () {
+        let fulfilledPromise = promise.then(() => {
             responseSpy.calledOnce.should.be.true;
 
             let statusCode = responseSpy.args[0][0];
@@ -61,14 +61,14 @@ describe('Login response code', function(){
         return fulfilledPromise;
     });
 
-    afterEach(function () {
+    afterEach(() => {
         mockery.deregisterAll();
         mockery.disable();
     });
 });
 
-describe('Login response body', function () {
-    it('has an accessToken property', function () {
+describe('Login response body', () => {
+    it('has an accessToken property', () => {
         const request = mockRequest(),
             response = mockResponse();
         let responseSpy = sinon.spy(response, 'json');
@@ -80,9 +80,9 @@ describe('Login response body', function () {
         storageStub.returns(promise);
 
         let loginMiddleware = createLoginMiddleware(storageStub);
-        loginMiddleware(request, response, function () {});
+        loginMiddleware(request, response, () => {});
 
-        let fulfilledPromise = promise.then(function () {
+        let fulfilledPromise = promise.then(() => {
             responseSpy.calledOnce.should.be.true;
 
             let statusCode = responseSpy.args[0][0];
@@ -99,14 +99,14 @@ describe('Login response body', function () {
         return fulfilledPromise;
     });
 
-    afterEach(function () {
+    afterEach(() => {
         mockery.deregisterAll();
         mockery.disable();
     });
 });
 
-describe('Login for registered customers with correct passwords', function(){
-    it('Return a 401 if password is incorrect', function(){
+describe('Login for registered customers with correct passwords', () => {
+    it('Return a 401 if password is incorrect', () => {
         const request = mockRequest(),
             response = mockResponse();
 
@@ -119,9 +119,9 @@ describe('Login for registered customers with correct passwords', function(){
         let responseSpy = sinon.spy(response, 'json');
 
         let loginMiddleware = createLoginMiddleware(storageStub);
-        loginMiddleware(request, response, function(){});
+        loginMiddleware(request, response, () => {});
 
-        let fulfilledPromise = promise.then(function () {
+        let fulfilledPromise = promise.then(() => {
             let statusCode = responseSpy.args[0][0];
             statusCode.should.deep.equal(401);
         });
@@ -137,7 +137,7 @@ describe('Login for registered customers with correct passwords', function(){
         return fulfilledPromise;
     });
 
-    afterEach(function () {
+    afterEach(() => {
         mockery.deregisterAll();
         mockery.disable();
     });
@@ -164,7 +164,7 @@ function createStorageResponse(request) {
 
 function mockResponse() {
     return {
-        json: function () {}
+        json: () => {}
     };
 }
 

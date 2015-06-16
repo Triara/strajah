@@ -4,8 +4,8 @@ const should = require('chai').should(),
     customerLogin = require('../../login/customerLogsIn.js'),
     _ = require('lodash');
 
-module.exports = function () {
-    this.When(/^the customer "([^"]*)" logs in with password "([^"]*)"$/, function (customerName, password, done) {
+module.exports = () => {
+    this.When(/^the customer "([^"]*)" logs in with password "([^"]*)"$/, (customerName, password, done) => {
         customerLogin(customerName, password, _.partial(saveResponse, this, done));
     });
 };

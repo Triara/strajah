@@ -2,8 +2,8 @@
 
 const database = require('../../../../src/storage/ancientStorage.js');
 
-module.exports = function () {
-    this.After(function (done) {
+module.exports = () => {
+    this.After(done => {
         database.reset();
         done();
     });

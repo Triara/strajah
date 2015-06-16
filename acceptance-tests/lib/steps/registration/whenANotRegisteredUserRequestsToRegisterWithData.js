@@ -5,8 +5,8 @@ const request = require('request'),
     should = require('chai').should(),
     _ = require('lodash');
 
-module.exports = function () {
-    this.When(/^a not registered user requests to register with data$/, function (registrationDataTable, done) {
+module.exports = () => {
+    this.When(/^a not registered user requests to register with data$/, (registrationDataTable, done) => {
         let registrationData = registrationDataTable.hashes()[0];
 
         request({

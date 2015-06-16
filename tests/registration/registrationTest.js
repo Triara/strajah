@@ -6,8 +6,8 @@ const should = require('chai').should(),
     mockery = require('mockery');
 
 
-describe('Registration route should be available', function () {
-    it('Should call the next function', function () {
+describe('Registration route should be available', () => {
+    it('Should call the next function', () => {
         const request = mockRequest(),
             response = mockResponse();
 
@@ -27,12 +27,12 @@ describe('Registration route should be available', function () {
 
         deferred.resolve();
 
-        promise.then(function () {
+        promise.then(() => {
             nextMock.verify();
         });
     });
 
-    it('Should return 201 created and a body', function () {
+    it('Should return 201 created and a body', () => {
         const request = mockRequest(),
             response = mockResponse();
 
@@ -46,9 +46,9 @@ describe('Registration route should be available', function () {
         let responseSpy = sinon.spy(response, 'json');
 
         let registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, storageSpy);
-        registrationMiddleware(request, response, function () {});
+        registrationMiddleware(request, response, () => {});
 
-        let fulfilledPromise = promise.then(function () {
+        let fulfilledPromise = promise.then(() => {
             responseSpy.calledOnce.should.be.true;
 
             let statusCode = responseSpy.args[0][0];
@@ -64,7 +64,7 @@ describe('Registration route should be available', function () {
         return fulfilledPromise;
     });
 
-    it('Should return 401 when a customer exists with the same name', function () {
+    it('Should return 401 when a customer exists with the same name', () => {
         const request = mockRequest(),
             response = mockResponse();
 
@@ -78,9 +78,9 @@ describe('Registration route should be available', function () {
         let responseSpy = sinon.spy(response, 'json');
 
         let registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, storageSpy);
-        registrationMiddleware(request, response, function () {});
+        registrationMiddleware(request, response, () => {});
 
-        let fulfilledPromise = promise.then(function () {
+        let fulfilledPromise = promise.then(() => {
             let statusCode = responseSpy.args[0][0];
             statusCode.should.deep.equal(401);
         });
@@ -95,7 +95,7 @@ describe('Registration route should be available', function () {
         return fulfilledPromise;
     });
 
-    it('Should store the customers and passwords', function () {
+    it('Should store the customers and passwords', () => {
         const request = mockRequest(),
             response = mockResponse();
 
@@ -108,16 +108,16 @@ describe('Registration route should be available', function () {
         let storageMock = sinon.mock();
 
         let registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, storageMock);
-        registrationMiddleware(request, response, function () {});
+        registrationMiddleware(request, response, () => {});
 
         deferred.resolve();
-        return promise.then(function () {
+        return promise.then(() => {
             storageMock.called.should.be.true;
             storageMock.args[0][0].should.deep.equal({name: request.body.name, password: request.body.password});
         });
     });
 
-    it('Should return 400 when missing \'name\' property in the body request', function () {
+    it('Should return 400 when missing \'name\' property in the body request', () => {
         const request = mockRequest();
         delete request.body.name;
 
@@ -133,9 +133,9 @@ describe('Registration route should be available', function () {
         let responseSpy = sinon.spy(response, 'json');
 
         let registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, storageSpy);
-        registrationMiddleware(request, response, function () {});
+        registrationMiddleware(request, response, () => {});
 
-        let fulfilledPromise = promise.then(function () {
+        let fulfilledPromise = promise.then(() => {
             responseSpy.calledOnce.should.be.true;
 
             let statusCode = responseSpy.args[0][0];
@@ -151,7 +151,7 @@ describe('Registration route should be available', function () {
         return fulfilledPromise;
     });
 
-    it('Should return 400 when missing \'password\' property in the body request', function () {
+    it('Should return 400 when missing \'password\' property in the body request', () => {
         const request = mockRequest();
         delete request.body.password;
 
@@ -167,9 +167,9 @@ describe('Registration route should be available', function () {
         let responseSpy = sinon.spy(response, 'json');
 
         let registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, storageSpy);
-        registrationMiddleware(request, response, function () {});
+        registrationMiddleware(request, response, () => {});
 
-        let fulfilledPromise = promise.then(function () {
+        let fulfilledPromise = promise.then(() => {
             responseSpy.calledOnce.should.be.true;
 
             let statusCode = responseSpy.args[0][0];
@@ -185,7 +185,7 @@ describe('Registration route should be available', function () {
         return fulfilledPromise;
     });
 
-    afterEach(function () {
+    afterEach(() => {
         mockery.deregisterAll();
         mockery.disable();
     });
@@ -202,7 +202,7 @@ function mockRequest () {
 }
 function mockResponse() {
     return {
-        json: function () {}
+        json: () => {}
     };
 }
 

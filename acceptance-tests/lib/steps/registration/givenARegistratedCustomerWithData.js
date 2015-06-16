@@ -5,8 +5,8 @@ const request = require('request'),
     should = require('chai').should(),
     _ = require('lodash');
 
-module.exports = function () {
-    this.Given(/^a registered customer with data$/, function (registrationDataTable, done) {
+module.exports = () => {
+    this.Given(/^a registered customer with data$/, (registrationDataTable, done) => {
         let registrationData = registrationDataTable.hashes()[0];
 
         request({

@@ -1,7 +1,7 @@
 'use strict';
 
-module.exports = function () {
-    this.Given(/^no one is registered in strajah$/, function (done) {
+module.exports = () => {
+    this.Given(/^no one is registered in strajah$/, done => {
         // After hooks cleans the database for now
         done();
     });

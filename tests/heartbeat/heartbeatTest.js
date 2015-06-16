@@ -3,25 +3,25 @@
 const heartbeat = require('../../src/heartbeat/heartbeat.js');
 require('chai').should();
 
-describe('Heartbeat status', function(){
+describe('Heartbeat status', () => {
 
-    it('must send back a response', function(){
+    it('must send back a response', () => {
         let obtainedStatusCode;
 
         let res = {
-            send: function(value){
+            send: value => {
                 obtainedStatusCode = value;
             }
         };
 
-        heartbeat(null, res, function(){});
+        heartbeat(null, res, () => {});
 
         obtainedStatusCode.should.equal(200);
     });
 
-    it('must call the next function', function(done){
+    it('must call the next function', (done) => {
         let res = {
-            send: function(){}
+            send: () => {}
         };
 
         heartbeat(null, res, done);

@@ -2,9 +2,10 @@
 
 const request = require('request'),
     testConfig = require('../../testConfig.js');
+require('chai').should();
 
-module.exports = function () {
-    this.When(/^a client app does the following request$/, function (requestTable, done) {
+module.exports = () => {
+    this.When(/^a client app does the following request$/, (requestTable, done) => {
         let requestData = requestTable.hashes()[0];
         this.publishValue('requestPath', requestData.path);
 
@@ -13,7 +14,7 @@ module.exports = function () {
             json: true,
             body: JSON.parse(requestData.body),
             method: requestData.method
-        }, function (error, response, body) {
+        }, () => {
             done();
         });
     });

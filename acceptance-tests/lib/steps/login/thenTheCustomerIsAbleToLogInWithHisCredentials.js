@@ -4,8 +4,8 @@ const customerLogin = require('../../login/customerLogsIn.js'),
     should = require('chai').should(),
     _ = require('lodash');
 
-module.exports = function () {
-    this.Then(/^the customer is able to log in with his credentials$/, function (credentialsTable, done) {
+module.exports = () => {
+    this.Then(/^the customer is able to log in with his credentials$/, (credentialsTable, done) => {
         const credentials = credentialsTable.hashes()[0],
             customerName = credentials['user name'],
             password = credentials['password'];
@@ -13,7 +13,7 @@ module.exports = function () {
         customerLogin(customerName, password, _.partial(checkLoginCorrect, done));
     });
 
-    this.Then(/^the customer is not able to log in with his credentials$/, function (credentialsTable, done) {
+    this.Then(/^the customer is not able to log in with his credentials$/, (credentialsTable, done) => {
         const credentials = credentialsTable.hashes()[0],
             customerName = credentials['user name'],
             password = credentials['password'];

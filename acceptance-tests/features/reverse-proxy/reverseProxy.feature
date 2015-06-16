@@ -6,8 +6,12 @@ Feature: Reverse proxy
   I want strajah to intercept all request for me
 
   @loadCustomConfig
+  @protectedServer
   Scenario: A request to protected server is intercepted
-    Given strajah is protecting the following path
+    Given the protected server has the following paths
+      | path    | method |
+      | /api/me | POST   |
+    And strajah is protecting the following path
       | protected path | allowed methods |
       | /api/me        | POST            |
     When a client app does the following request

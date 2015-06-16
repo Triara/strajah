@@ -1,24 +1,25 @@
 'use strict';
 
-const nock = require('nock'),
+const proxyConfig = require('../../../../src/reverseProxy/proxyConfig.js'),
+    request = require('request'),
     _ = require('lodash');
+
 require('chai').should();
 
-nock.recorder.rec({
-    dont_print: true,
-    output_objects: true
-});
-
 module.exports = () => {
-    nock.enableNetConnect('http://localhost:3000');
-
     this.Then(/^strajah forwards it to the protected server$/, done => {
-        let protectedPath = this.getValue('requestPath');
+        const protectedPath = this.getValue('requestPath');
 
-        let requestsToProtectedPath = _.filter(nock.recorder.play(), recordedRequest => {
-            return recordedRequest.path === protectedPath;
+        request({
+            url: proxyConfig.protectedServer.host + ':' + proxyConfig.protectedServer.port + '/api/get-requests',
+            method: 'GET',
+            json: true
+        }, (error, response, body) => {
+            _.includes(_.map(body.items, performedCall => {
+                return performedCall.uri
+            }), protectedPath);
+
+            done();
         });
-        requestsToProtectedPath[0].status.should.deep.equal(200);
-        done();
     });
 };

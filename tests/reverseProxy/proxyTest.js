@@ -24,7 +24,7 @@ describe('Protected paths', () => {
             callback();
         };
 
-        let proxy = createProxyMiddleware(requestStub);
+        const proxy = createProxyMiddleware(requestStub);
 
         let proxyMiddleware = _.partial(proxy, proxyConfig);
         proxyMiddleware(request, response, nextMock);
@@ -48,7 +48,7 @@ describe('Protected paths', () => {
         let proxyConfigWithValidPath = _.cloneDeep(proxyConfig);
         proxyConfigWithValidPath.paths[0].path = request.url;
 
-        let proxy = createProxyMiddleware(requestMock);
+        const proxy = createProxyMiddleware(requestMock);
 
         let proxyMiddleware = _.partial(proxy, proxyConfigWithValidPath);
         proxyMiddleware(request, response, () => {});
@@ -56,7 +56,10 @@ describe('Protected paths', () => {
         deferred.resolve();
         return promise.then(() => {
             requestMock.called.should.equal(true);
-            requestMock.args[0][0].url.should.deep.equal(request.url);
+
+            const expectedURL = proxyConfigWithValidPath.protectedServer.host + ':' + proxyConfigWithValidPath.protectedServer.port + request.url;
+            requestMock.args[0][0].url.should.deep.equal(expectedURL);
+
             requestMock.args[0][0].body.should.deep.equal(request.body);
             requestMock.args[0][0].method.should.deep.equal(request.method);
         });
@@ -75,7 +78,7 @@ describe('Protected paths', () => {
         let proxyConfigWithInvalidPath = _.cloneDeep(proxyConfig);
         proxyConfigWithInvalidPath.paths[0].path = request.url + '-invalid';
 
-        let proxy = createProxyMiddleware(requestMock);
+        const proxy = createProxyMiddleware(requestMock);
 
         let proxyMiddleware = _.partial(proxy, proxyConfigWithInvalidPath);
         proxyMiddleware(request, response, () => {});
@@ -88,8 +91,6 @@ describe('Protected paths', () => {
             statusCode.should.deep.equal(403);
         });
     });
-
-
 
     afterEach(() => {
         mockery.deregisterAll();

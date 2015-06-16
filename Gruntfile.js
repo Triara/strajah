@@ -23,6 +23,7 @@ module.exports = function (grunt) {
             src: 'acceptance-tests/',
             options: {
                 steps: "acceptance-tests/lib/steps",
+                tags: '~@pending',
                 format: "pretty",
                 modulePath: "../../cucumber/lib/cucumber.js"
             }

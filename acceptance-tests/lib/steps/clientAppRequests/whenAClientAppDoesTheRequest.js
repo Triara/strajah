@@ -9,12 +9,15 @@ module.exports = () => {
         let requestData = requestTable.hashes()[0];
         this.publishValue('requestPath', requestData.path);
 
-        request({
+        const optionsForRequest = {
             url: testConfig.publicHost + ':' + testConfig.publicPort + requestData.path,
             json: true,
             body: JSON.parse(requestData.body),
             method: requestData.method
-        }, () => {
+        };
+
+        request(optionsForRequest, (error, response) => {
+            response.statusCode.should.equal(200);
             done();
         });
     });

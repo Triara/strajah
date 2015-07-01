@@ -3,8 +3,6 @@
 module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
 
-    var tag = grunt.option('tag') || 'savings-commander';
-
     grunt.initConfig({
         mochacli: {
             options: {

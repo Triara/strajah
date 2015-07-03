@@ -6,18 +6,13 @@ const _ = require('lodash'),
 module.exports = login;
 
 function login(request, response, next) {
-    retrieveCustomers().then(customers => {
-        let filteredCustomers = _.filter(customers, retrievedCustomer => {
-            return retrievedCustomer.name === request.body.name &&
-                retrievedCustomer.password === request.body.password;
-        });
-
-        if (_.isEmpty(filteredCustomers)) {
-            response.json(401);
+    retrieveCustomers().then(customer => {
+        if (_.isNull(customer) || customer.name !== request.body.name || customer.password !== request.body.password) {
+            response.send(401);
             return next();
         }
 
-        let body = {accessToken: '123abc'};
+        const body = {accessToken: '123abc'};
         response.json(200, body);
         return next();
     });

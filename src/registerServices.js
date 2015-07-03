@@ -3,6 +3,7 @@
 const modules = [
     require('./registration'),
     require('./heartbeat'),
+    require('./users'),
     require('./login')
 ];
 

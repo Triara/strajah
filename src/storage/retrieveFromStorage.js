@@ -1,8 +1,25 @@
 'use strict';
 
-const q = require('q'),
-    database = require('./ancientStorage.js');
+const mongoClient = require('mongodb').MongoClient,
+    config = require('../config.js');
 
-module.exports = () => {
-    return q(database.getValue());
+const url = 'mongodb://' + config.database.host + ':' + config.database.port + '/' + config.database.name;
+
+module.exports = filter => {
+    return new Promise((resolve, reject) => {
+
+        mongoClient.connect(url, (err, db) => {
+
+            const collection = db.collection(config.database.collectionName);
+
+            collection.findOne(filter, (err, retrievedItem) => {
+                if (err !== null) {
+                    reject(Error(err));
+                } else {
+                    resolve(retrievedItem);
+                }
+                db.close();
+            })
+        });
+    });
 };

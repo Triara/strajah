@@ -43,7 +43,8 @@ describe('Login response code', () => {
         storageStub.returns(promise);
 
         let loginMiddleware = createLoginMiddleware(storageStub);
-        loginMiddleware(request, response, () => {});
+        loginMiddleware(request, response, () => {
+        });
 
         let fulfilledPromise = promise.then(() => {
             responseSpy.calledOnce.should.be.true;
@@ -57,6 +58,37 @@ describe('Login response code', () => {
         });
 
         deferred.resolve(createStorageResponse(request));
+
+        return fulfilledPromise;
+    });
+
+    it('if no customer is returned a 401 Unauthorized is sent back', () => {
+        const request = mockRequest(),
+            response = mockResponse();
+        let responseSpy = sinon.spy(response, 'send');
+
+        let deferred = q.defer();
+        let promise = deferred.promise;
+
+        let storageStub = sinon.stub();
+        storageStub.returns(promise);
+
+        let loginMiddleware = createLoginMiddleware(storageStub);
+        loginMiddleware(request, response, () => {
+        });
+
+        const fulfilledPromise = promise.then(() => {
+            responseSpy.calledOnce.should.be.true;
+
+            const statusCode = responseSpy.args[0][0];
+            should.exist(statusCode);
+            statusCode.should.deep.equal(401);
+
+            const body = responseSpy.args[0][1];
+            should.not.exist(body);
+        });
+
+        deferred.resolve(null);
 
         return fulfilledPromise;
     });
@@ -80,7 +112,8 @@ describe('Login response body', () => {
         storageStub.returns(promise);
 
         let loginMiddleware = createLoginMiddleware(storageStub);
-        loginMiddleware(request, response, () => {});
+        loginMiddleware(request, response, () => {
+        });
 
         let fulfilledPromise = promise.then(() => {
             responseSpy.calledOnce.should.be.true;
@@ -116,17 +149,18 @@ describe('Login for registered customers with correct passwords', () => {
         let storageStub = sinon.stub();
         storageStub.returns(promise);
 
-        let responseSpy = sinon.spy(response, 'json');
+        let responseSpy = sinon.spy(response, 'send');
 
-        let loginMiddleware = createLoginMiddleware(storageStub);
-        loginMiddleware(request, response, () => {});
+        const loginMiddleware = createLoginMiddleware(storageStub);
+        loginMiddleware(request, response, () => {
+        });
 
-        let fulfilledPromise = promise.then(() => {
-            let statusCode = responseSpy.args[0][0];
+        const fulfilledPromise = promise.then(() => {
+            const statusCode = responseSpy.args[0][0];
             statusCode.should.deep.equal(401);
         });
 
-        let storageResponse = [
+        const storageResponse = [
             {
                 name: 'User1',
                 password: 'Incorrect password'
@@ -143,7 +177,7 @@ describe('Login for registered customers with correct passwords', () => {
     });
 });
 
-function mockRequest () {
+function mockRequest() {
     return {
         params: {},
         body: {
@@ -154,17 +188,18 @@ function mockRequest () {
 }
 
 function createStorageResponse(request) {
-    return [
-        {
-            name: request.body.name,
-            password: request.body.password
-        }
-    ]
+    return {
+        name: request.body.name,
+        password: request.body.password
+    };
 }
 
 function mockResponse() {
     return {
-        json: () => {}
+        json: () => {
+        },
+        send: () => {
+        }
     };
 }
 

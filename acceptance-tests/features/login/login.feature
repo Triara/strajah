@@ -11,7 +11,6 @@ Feature: Login
     Then the response code must be 200
     And the response body has "accessToken" property
 
-
   Scenario: No registered customer tries to log in
     Given no one is registered in strajah
     When the customer "Ironman" logs in with password "Av3ng3Rs"

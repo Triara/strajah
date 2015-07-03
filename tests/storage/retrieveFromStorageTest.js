@@ -1,35 +1,51 @@
 'use strict';
 
 const should = require('chai').should(),
+    q = require('q'),
     mockery = require('mockery');
 
 
 describe('Retrieve all entries from storage', () => {
     it('Should return a promise', () => {
-        let databaseStub = {
-            getValue: () => {
-                return 'storedData';
-            }
-        };
+        const databaseStub = {};
         const retrieveFromStorage = createRetrieveFromStorage(databaseStub);
-        const promise = retrieveFromStorage();
 
-        should.exist(promise);
+        q.isPromiseAlike(retrieveFromStorage())
     });
 
-    it('Should return retrieved data' , done => {
-        let storedData = 'store me';
-        let databaseStub = {
-            getValue: () => {
-                return storedData;
+    it('Should return retrieved data' , () => {
+        const storedData = {'store me': 'inside the db'};
+
+        let usedCollectionName;
+        let usedFilterToFindItems;
+        const dbStub = {
+            collection: collectionName => {
+                usedCollectionName = collectionName;
+                return {
+                    findOne: (filterQueryToFind, findOneCallback) => {
+                        usedFilterToFindItems = filterQueryToFind;
+                        findOneCallback(null, storedData)
+                    }
+                }
             }
         };
 
-        let retrieveFromStorage = createRetrieveFromStorage(databaseStub);
-        retrieveFromStorage().then(retrievedData => {
-            retrievedData.should.not.equal(undefined);
+        let dbConnectedToUrl;
+        const databaseStub = {
+            MongoClient: {
+                connect: (url, connectCallback) => {
+                    dbConnectedToUrl = url;
+                    connectCallback(null, dbStub)
+                }
+            }
+        };
+
+        const retrieveFromStorage = createRetrieveFromStorage(databaseStub);
+        const filter = {some: 'info'};
+        return retrieveFromStorage(filter).then(retrievedData => {
+            should.exist(retrievedData);
             retrievedData.should.deep.equal(storedData);
-            done();
+            usedFilterToFindItems.should.deep.equal(filter);
         });
     });
 
@@ -41,7 +57,7 @@ describe('Retrieve all entries from storage', () => {
 
 
 function createRetrieveFromStorage (databaseStub) {
-    mockery.registerMock('./ancientStorage.js', databaseStub);
+    mockery.registerMock('mongodb', databaseStub);
 
     mockery.enable({
         useCleanCache: true,

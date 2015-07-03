@@ -5,21 +5,16 @@ const mongoClient = require('mongodb').MongoClient,
 
 const url = 'mongodb://' + config.database.host + ':' + config.database.port + '/' + config.database.name;
 
-module.exports = dataToPersist => {
-    return new Promise((resolve, reject) => {
+module.exports = filter => {
+    return new Promise((resolve) => {
 
         mongoClient.connect(url, (err, db) => {
 
             const collection = db.collection(config.database.collectionName);
 
-            collection.insertOne(dataToPersist, err => {
-                if (err !== null) {
-                    reject(Error(err));
-                } else {
-                    resolve();
-                }
-                db.close();
-            })
+            collection.remove(filter);
+            resolve();
+            db.close();
         });
     });
 };

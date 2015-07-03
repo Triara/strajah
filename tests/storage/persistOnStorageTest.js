@@ -2,31 +2,55 @@
 
 const _ = require('lodash'),
     sinon = require('sinon'),
+    config = require('../../src/config'),
+    q = require('q'),
     mockery = require('mockery');
 require('chai').should();
 
 describe('Persist on storage', () => {
-    it('Should be a function', () => {
-        let databaseSpy = sinon.spy();
-        let persistOnStorage = createPersistOnStorage(databaseSpy);
+    it('Should return a promise', () => {
+        let databaseStub = sinon.spy();
 
-        _.isFunction(persistOnStorage).should.equal(true);
+        const persistOnStorage = createPersistOnStorage(databaseStub);
+
+        q.isPromiseAlike(persistOnStorage('persist something')).should.equal(true);
     });
 
     it('Should call the db publishValue method', () => {
-        let databaseStub = {
-            publishValue: () => {}
+
+        let usedCollectionName;
+        let dataSentToPersist;
+        const dbStub = {
+            collection: collectionName => {
+                usedCollectionName = collectionName;
+                return {
+                    insertOne: (dataToPersist, insertOneCallback) => {
+                        dataSentToPersist = dataToPersist;
+                        insertOneCallback(null);
+                    }
+                }
+            }
         };
 
-        let databaseSpy = sinon.spy(databaseStub, 'publishValue');
+        let dbConnectedToUrl;
+        const databaseStub = {
+            MongoClient: {
+                connect: (url, connectCallback) => {
+                    dbConnectedToUrl = url;
+                    connectCallback(null, dbStub)
+                }
+            }
+        };
 
         let persistOnStorage = createPersistOnStorage(databaseStub);
 
         const dataToPersist = {some: 'data'};
-        persistOnStorage(dataToPersist);
 
-        databaseSpy.calledOnce.should.equal(true);
-        databaseSpy.args[0][0].should.deep.equal(dataToPersist);
+        return persistOnStorage(dataToPersist).then(() => {
+            dbConnectedToUrl.should.equal('mongodb://' + config.database.host + ':' + config.database.port + '/' + config.database.name);
+            usedCollectionName.should.equal(config.database.collectionName);
+            dataSentToPersist.should.deep.equal(dataToPersist);
+        });
     });
 
     afterEach(() => {
@@ -35,8 +59,8 @@ describe('Persist on storage', () => {
     });
 });
 
-function createPersistOnStorage (databaseStub) {
-    mockery.registerMock('./ancientStorage.js', databaseStub);
+function createPersistOnStorage(databaseStub) {
+    mockery.registerMock('mongodb', databaseStub);
 
     mockery.enable({
         useCleanCache: true,

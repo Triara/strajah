@@ -12,7 +12,7 @@ module.exports = dataToPersist => {
 
             const collection = db.collection(config.database.collectionName);
 
-            collection.insertOne(dataToPersist, err => {
+            collection.insertOne(dataToPersist,{w:1}, err => {
                 if (err !== null) {
                     reject(Error(err));
                 } else {

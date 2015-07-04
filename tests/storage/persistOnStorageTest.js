@@ -24,7 +24,7 @@ describe('Persist on storage', () => {
             collection: collectionName => {
                 usedCollectionName = collectionName;
                 return {
-                    insertOne: (dataToPersist, insertOneCallback) => {
+                    insertOne: (dataToPersist, options, insertOneCallback) => {
                         dataSentToPersist = dataToPersist;
                         insertOneCallback(null);
                     }

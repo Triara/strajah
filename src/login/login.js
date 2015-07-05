@@ -7,6 +7,7 @@ module.exports = login;
 
 function login(request, response, next) {
     retrieveCustomers().then(customer => {
+        console.log(customer);
         if (_.isNull(customer) || customer.name !== request.body.name || customer.password !== request.body.password) {
             response.send(401);
             return next();

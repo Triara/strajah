@@ -17,12 +17,12 @@ describe('Registration route should be available', () => {
         let retrieveFromStorageStub = sinon.stub();
         retrieveFromStorageStub.returns(promise);
 
-        let storageSpy = sinon.spy();
+        let persistOnStorageSpy = sinon.spy();
 
         let nextMock = sinon.mock();
         nextMock.once();
 
-        let registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, storageSpy);
+        const registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, persistOnStorageSpy);
         registrationMiddleware(request, response, nextMock);
 
         deferred.resolve();
@@ -62,8 +62,6 @@ describe('Registration route should be available', () => {
             statusCode.should.equal(201);
             done();
         });
-
-
     });
 
     it('Should return 401 when a customer exists with the same name', () => {
@@ -76,10 +74,9 @@ describe('Registration route should be available', () => {
         let retrieveFromStorageStub = sinon.stub();
         retrieveFromStorageStub.returns(promise);
 
-        let storageSpy = sinon.spy();
         let responseSpy = sinon.spy(response, 'json');
 
-        let registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, storageSpy);
+        let registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, sinon.spy());
         registrationMiddleware(request, response, () => {});
 
         let fulfilledPromise = promise.then(() => {
@@ -107,15 +104,15 @@ describe('Registration route should be available', () => {
         let retrieveFromStorageStub = sinon.stub();
         retrieveFromStorageStub.returns(promise);
 
-        let storageMock = sinon.mock();
+        let persistOnStorageSpy = sinon.mock();
 
-        let registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, storageMock);
+        const registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, persistOnStorageSpy);
         registrationMiddleware(request, response, () => {});
 
         deferred.resolve();
         return promise.then(() => {
-            storageMock.called.should.be.true;
-            storageMock.args[0][0].should.deep.equal({name: request.body.name, password: request.body.password});
+            persistOnStorageSpy.calledOnce.should.equal(true);
+            persistOnStorageSpy.args[0][0].should.deep.equal({name: request.body.name, password: request.body.password});
         });
     });
 
@@ -131,10 +128,9 @@ describe('Registration route should be available', () => {
         let retrieveFromStorageStub = sinon.stub();
         retrieveFromStorageStub.returns(promise);
 
-        let storageSpy = sinon.spy();
         let responseSpy = sinon.spy(response, 'json');
 
-        let registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, storageSpy);
+        const registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, sinon.spy());
         registrationMiddleware(request, response, () => {});
 
         let fulfilledPromise = promise.then(() => {
@@ -165,10 +161,9 @@ describe('Registration route should be available', () => {
         let retrieveFromStorageStub = sinon.stub();
         retrieveFromStorageStub.returns(promise);
 
-        let storageSpy = sinon.spy();
         let responseSpy = sinon.spy(response, 'json');
 
-        let registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, storageSpy);
+        const registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, sinon.spy());
         registrationMiddleware(request, response, () => {});
 
         let fulfilledPromise = promise.then(() => {

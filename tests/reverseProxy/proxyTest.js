@@ -1,7 +1,6 @@
 'use strict';
 
 const should = require('chai').should(),
-    q = require('q'),
     sinon = require('sinon'),
     mockery = require('mockery'),
     proxyConfig = require('../../src/reverseProxy/proxyConfig.js'),
@@ -9,52 +8,35 @@ const should = require('chai').should(),
 require('chai').should();
 
 
-describe('Protected paths', () => {
-    it('must call the next function', () => {
+describe('Reverse proxy', () => {
+    it('must call the next function', done => {
         const request = mockRequest(),
             response = mockResponse();
-
-        let deferred = q.defer();
-        let promise = deferred.promise;
 
         let nextMock = sinon.mock();
         nextMock.once();
 
-        let requestStub = (options, callback) => {
+        const requestStub = (options, callback) => {
             callback();
         };
 
-        const proxy = createProxyMiddleware(requestStub);
-
-        let proxyMiddleware = _.partial(proxy, proxyConfig);
-        proxyMiddleware(request, response, nextMock);
-
-        deferred.resolve();
-
-        return promise.then(() => {
-            nextMock.verify();
-        });
+        let proxyMiddleware = _.partial(createProxyMiddleware(requestStub), proxyConfig);
+        proxyMiddleware(request, response, done);
     });
 
     it('should forward requests to protected paths', () => {
         const request = mockRequest(),
             response = mockResponse();
 
-        let deferred = q.defer();
-        let promise = deferred.promise;
-
         let requestMock = sinon.mock();
 
         let proxyConfigWithValidPath = _.cloneDeep(proxyConfig);
         proxyConfigWithValidPath.paths[0].path = request.url;
 
-        const proxy = createProxyMiddleware(requestMock);
+        const proxyMiddleware = _.partial(createProxyMiddleware(requestMock), proxyConfigWithValidPath);
+        proxyMiddleware(request, response, testChecks);
 
-        let proxyMiddleware = _.partial(proxy, proxyConfigWithValidPath);
-        proxyMiddleware(request, response, () => {});
-
-        deferred.resolve();
-        return promise.then(() => {
+        function testChecks() {
             requestMock.called.should.equal(true);
 
             const expectedURL = proxyConfigWithValidPath.protectedServer.host + ':' + proxyConfigWithValidPath.protectedServer.port + request.url;
@@ -62,7 +44,7 @@ describe('Protected paths', () => {
 
             requestMock.args[0][0].body.should.deep.equal(request.body);
             requestMock.args[0][0].method.should.deep.equal(request.method);
-        });
+        }
     });
 
     it('protected paths can be regexp', () => {
@@ -98,26 +80,20 @@ describe('Protected paths', () => {
             response = mockResponse();
         let responseSpy = sinon.spy(response, 'json');
 
-        let deferred = q.defer();
-        let promise = deferred.promise;
-
         let requestMock = sinon.mock();
 
         let proxyConfigWithInvalidPath = _.cloneDeep(proxyConfig);
         proxyConfigWithInvalidPath.paths[0].path = request.url + '-invalid';
 
-        const proxy = createProxyMiddleware(requestMock);
+        const proxyMiddleware = _.partial(createProxyMiddleware(requestMock), proxyConfigWithInvalidPath);
+        proxyMiddleware(request, response, testChecks);
 
-        let proxyMiddleware = _.partial(proxy, proxyConfigWithInvalidPath);
-        proxyMiddleware(request, response, () => {});
-
-        deferred.resolve();
-        return promise.then(() => {
+        function testChecks () {
             requestMock.called.should.equal(false);
             let statusCode = responseSpy.args[0][0];
             should.exist(statusCode);
             statusCode.should.deep.equal(403);
-        });
+        }
     });
 
     afterEach(() => {
@@ -155,4 +131,3 @@ function createProxyMiddleware(requestMock) {
 
     return require('../../src/reverseProxy/proxy.js');
 }
-

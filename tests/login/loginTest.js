@@ -15,18 +15,18 @@ describe('Login response code', () => {
         let deferred = q.defer();
         let promise = deferred.promise;
 
-        let storageStub = sinon.stub();
-        storageStub.returns(promise);
+        let retrieveFromStorageStub = sinon.stub();
+        retrieveFromStorageStub.returns(promise);
 
         let nextMock = sinon.mock();
         nextMock.once();
 
-        let loginMiddleware = createLoginMiddleware(storageStub);
+        const loginMiddleware = createLoginMiddleware(retrieveFromStorageStub);
         loginMiddleware(request, response, nextMock);
 
         deferred.resolve(createStorageResponse(request));
 
-        promise.then(() => {
+        return promise.then(() => {
             nextMock.verify();
         });
     });
@@ -39,12 +39,11 @@ describe('Login response code', () => {
         let deferred = q.defer();
         let promise = deferred.promise;
 
-        let storageStub = sinon.stub();
-        storageStub.returns(promise);
+        let retrieveFromStorageStub = sinon.stub();
+        retrieveFromStorageStub.returns(promise);
 
-        let loginMiddleware = createLoginMiddleware(storageStub);
-        loginMiddleware(request, response, () => {
-        });
+        const loginMiddleware = createLoginMiddleware(retrieveFromStorageStub);
+        loginMiddleware(request, response, () => {});
 
         let fulfilledPromise = promise.then(() => {
             responseSpy.calledOnce.should.be.true;
@@ -70,12 +69,11 @@ describe('Login response code', () => {
         let deferred = q.defer();
         let promise = deferred.promise;
 
-        let storageStub = sinon.stub();
-        storageStub.returns(promise);
+        let retrieveFromStorageStub = sinon.stub();
+        retrieveFromStorageStub.returns(promise);
 
-        let loginMiddleware = createLoginMiddleware(storageStub);
-        loginMiddleware(request, response, () => {
-        });
+        const loginMiddleware = createLoginMiddleware(retrieveFromStorageStub);
+        loginMiddleware(request, response, () => {});
 
         const fulfilledPromise = promise.then(() => {
             responseSpy.calledOnce.should.be.true;
@@ -108,12 +106,11 @@ describe('Login response body', () => {
         let deferred = q.defer();
         let promise = deferred.promise;
 
-        let storageStub = sinon.stub();
-        storageStub.returns(promise);
+        let retrieveFromStorageStub = sinon.stub();
+        retrieveFromStorageStub.returns(promise);
 
-        let loginMiddleware = createLoginMiddleware(storageStub);
-        loginMiddleware(request, response, () => {
-        });
+        const loginMiddleware = createLoginMiddleware(retrieveFromStorageStub);
+        loginMiddleware(request, response, () => {});
 
         let fulfilledPromise = promise.then(() => {
             responseSpy.calledOnce.should.be.true;
@@ -146,12 +143,12 @@ describe('Login for registered customers with correct passwords', () => {
         let deferred = q.defer();
         let promise = deferred.promise;
 
-        let storageStub = sinon.stub();
-        storageStub.returns(promise);
+        let retrieveFromStorageStub = sinon.stub();
+        retrieveFromStorageStub.returns(promise);
 
         let responseSpy = sinon.spy(response, 'send');
 
-        const loginMiddleware = createLoginMiddleware(storageStub);
+        const loginMiddleware = createLoginMiddleware(retrieveFromStorageStub);
         loginMiddleware(request, response, () => {
         });
 

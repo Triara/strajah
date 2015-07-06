@@ -6,7 +6,6 @@ const retrieveCustomers = require('./../storage/retrieveFromStorage.js'),
 
 module.exports = (request, response, next) => {
     retrieveCustomers().then(customers => {
-        console.log()
         if (_.isEmpty(request.body.name)) {
             response.json(400, 'missing name property');
             return next();

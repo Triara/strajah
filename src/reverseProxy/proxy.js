@@ -7,15 +7,15 @@ const request = require('request'),
 module.exports = proxy;
 
 function proxy(proxyConfig, incomingRequest, response, next) {
-    let foundCoincidences = _.filter(proxyConfig.paths, protectedUri => {
-        return protectedUri.path === incomingRequest.url;
+    const foundCoincidences = _.filter(proxyConfig.paths, protectedUri => {
+        return incomingRequest.url.match(protectedUri.path);
     });
+
 
     if (foundCoincidences.length === 0) {
         response.json(403);
         return next();
     }
-
 
     request({
         url: proxyConfig.protectedServer.host + ':' + proxyConfig.protectedServer.port + incomingRequest.url,

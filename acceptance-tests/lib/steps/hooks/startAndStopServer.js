@@ -10,7 +10,7 @@ module.exports = () => {
         this.serverInstance.start(done);
     });
 
-    this.After("~@loadCustomConfig", done => {
+    this.After(done => {
         const world = this;
 
         resetDataBase(() => {

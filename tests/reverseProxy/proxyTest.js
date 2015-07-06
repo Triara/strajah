@@ -65,6 +65,34 @@ describe('Protected paths', () => {
         });
     });
 
+    it('protected paths can be regexp', () => {
+        const response = mockResponse();
+        let request = mockRequest();
+
+        request.url = 'pppppp123';
+        const regexpAsProtectedPath = /p*123/;
+
+        let requestMock = sinon.mock();
+
+        let proxyConfigWithValidPath = _.cloneDeep(proxyConfig);
+        proxyConfigWithValidPath.paths[0].path = regexpAsProtectedPath;
+
+        const proxy = createProxyMiddleware(requestMock);
+
+        let proxyMiddleware = _.partial(proxy, proxyConfigWithValidPath);
+        proxyMiddleware(request, response, testChecks);
+
+        function testChecks () {
+            requestMock.calledOnce.should.equal(true);
+
+            const expectedURL = proxyConfigWithValidPath.protectedServer.host + ':' + proxyConfigWithValidPath.protectedServer.port + request.url;
+            requestMock.args[0][0].url.should.deep.equal(expectedURL);
+
+            requestMock.args[0][0].body.should.deep.equal(request.body);
+            requestMock.args[0][0].method.should.deep.equal(request.method);
+        }
+    });
+
     it('should not forward not protected paths', () => {
         const request = mockRequest(),
             response = mockResponse();

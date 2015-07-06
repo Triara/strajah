@@ -40,13 +40,17 @@ describe('Registration route should be available', () => {
         //stub database calls
         let deferredForRetrieveFromStorage = q.defer();
         let promiseForRetrieveFromStorage = deferredForRetrieveFromStorage.promise;
+        deferredForRetrieveFromStorage.resolve();
         let retrieveFromStorageStub = sinon.stub();
         retrieveFromStorageStub.returns(promiseForRetrieveFromStorage);
 
+
         let deferredForPersistOnStorage = q.defer();
         let promiseForPersistOnStorage = deferredForPersistOnStorage.promise;
+        deferredForPersistOnStorage.resolve();
         let persistOnStorageStub = sinon.stub();
         persistOnStorageStub.returns(promiseForPersistOnStorage);
+
 
         const registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, persistOnStorageStub);
 
@@ -59,8 +63,7 @@ describe('Registration route should be available', () => {
             done();
         });
 
-        deferredForRetrieveFromStorage.resolve();
-        deferredForPersistOnStorage.resolve();
+
     });
 
     it('Should return 401 when a customer exists with the same name', () => {

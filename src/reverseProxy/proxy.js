@@ -11,7 +11,6 @@ function proxy(proxyConfig, incomingRequest, response, next) {
         return incomingRequest.url.match(protectedUri.path);
     });
 
-
     if (foundCoincidences.length === 0) {
         response.json(403);
         return next();

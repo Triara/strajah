@@ -7,7 +7,7 @@ const request = require('request'),
 
 module.exports = function (customerName, password, callback) {
     request({
-        uri: testConfig.publicHost + ':' + testConfig.publicPort + '/api/auth/login',
+        uri: testConfig.publicHost + ':' + testConfig.publicPort + '/auth/login',
         method: 'POST',
         json: true,
         body: {

@@ -8,7 +8,7 @@ const _ = require('lodash'),
 module.exports = () => {
     this.When(/^I request the heartbeat$/, done => {
         request({
-                url: testConfig.publicHost + ':' + testConfig.publicPort + '/api/heartbeat',
+                url: testConfig.publicHost + ':' + testConfig.publicPort + '/auth/heartbeat',
                 method: 'GET'
             }
             , _.partial(saveResponse, this, done));

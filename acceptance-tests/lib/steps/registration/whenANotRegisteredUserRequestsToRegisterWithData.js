@@ -10,7 +10,7 @@ module.exports = () => {
         let registrationData = registrationDataTable.hashes()[0];
 
         request({
-            uri: testConfig.publicHost + ':' + testConfig.publicPort + '/api/registration',
+            uri: testConfig.publicHost + ':' + testConfig.publicPort + '/auth/users',
             method: 'POST',
             json: true,
             body: {

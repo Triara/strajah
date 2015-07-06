@@ -7,5 +7,5 @@ module.exports = {
 };
 
 function registerIn(server) {
-    server.del('/users', deleteUsers)
+    server.del('/auth/users', deleteUsers)
 }

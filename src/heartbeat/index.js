@@ -7,5 +7,5 @@ module.exports = {
 };
 
 function registerIn (server) {
-    server.get('/api/heartbeat', makeHeartbeat);
+    server.get('/auth/heartbeat', makeHeartbeat);
 }

@@ -7,5 +7,5 @@ module.exports = {
 };
 
 function registerIn (server) {
-    server.post('/api/auth/login', login);
+    server.post('/auth/login', login);
 }

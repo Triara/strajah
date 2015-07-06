@@ -21,7 +21,7 @@ module.exports = () => {
 
 function resetDataBase (callback) {
     const requestOptions = {
-        url: testConfig.publicHost + ':' + testConfig.publicPort + '/users',
+        url: testConfig.publicHost + ':' + testConfig.publicPort + '/auth/users',
         method: 'DELETE'
     };
 

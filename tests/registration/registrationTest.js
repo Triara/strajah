@@ -32,36 +32,35 @@ describe('Registration route should be available', () => {
         });
     });
 
-    it('Should return 201 created and a body', () => {
-        const request = mockRequest(),
-            response = mockResponse();
-
-        let deferred = q.defer();
-        let promise = deferred.promise;
-
-        let retrieveFromStorageStub = sinon.stub();
-        retrieveFromStorageStub.returns(promise);
-
-        let storageSpy = sinon.spy();
+    it('Should return 201 created and a body', done => {
+        const request = mockRequest();
+        const response = mockResponse();
         let responseSpy = sinon.spy(response, 'json');
 
-        let registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, storageSpy);
-        registrationMiddleware(request, response, () => {});
+        //stub database calls
+        let deferredForRetrieveFromStorage = q.defer();
+        let promiseForRetrieveFromStorage = deferredForRetrieveFromStorage.promise;
+        let retrieveFromStorageStub = sinon.stub();
+        retrieveFromStorageStub.returns(promiseForRetrieveFromStorage);
 
-        let fulfilledPromise = promise.then(() => {
-            responseSpy.calledOnce.should.be.true;
+        let deferredForPersistOnStorage = q.defer();
+        let promiseForPersistOnStorage = deferredForPersistOnStorage.promise;
+        let persistOnStorageStub = sinon.stub();
+        persistOnStorageStub.returns(promiseForPersistOnStorage);
 
-            let statusCode = responseSpy.args[0][0];
+        const registrationMiddleware = createRegistrationMiddleware(retrieveFromStorageStub, persistOnStorageStub);
+
+        // execute call
+        registrationMiddleware(request, response, () => {
+            responseSpy.calledOnce.should.equal(true);
+            const statusCode = responseSpy.args[0][0];
             should.exist(statusCode);
-            statusCode.should.deep.equal(201);
-
-            let body = responseSpy.args[0][1];
-            should.exist(body);
+            statusCode.should.equal(201);
+            done();
         });
 
-        deferred.resolve();
-
-        return fulfilledPromise;
+        deferredForRetrieveFromStorage.resolve();
+        deferredForPersistOnStorage.resolve();
     });
 
     it('Should return 401 when a customer exists with the same name', () => {
@@ -206,9 +205,9 @@ function mockResponse() {
     };
 }
 
-function createRegistrationMiddleware(retrieveFromStorageStub, storageMock) {
+function createRegistrationMiddleware(retrieveFromStorageStub, persistOnStorageStub) {
     mockery.registerMock('./../storage/retrieveFromStorage.js', retrieveFromStorageStub);
-    mockery.registerMock('./../storage/persistOnStorage.js', storageMock);
+    mockery.registerMock('./../storage/persistOnStorage.js', persistOnStorageStub);
 
     mockery.enable({
         useCleanCache: true,

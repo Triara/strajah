@@ -10,4 +10,5 @@ module.exports = {
 function registerIn (server, customConfig) {
     let proxyMiddleware = _.partial(reverseProxy, customConfig);
     server.post('/(.*)/', proxyMiddleware);
+    server.get('/(.*)/', proxyMiddleware);
 }

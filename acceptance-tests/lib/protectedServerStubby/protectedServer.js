@@ -37,6 +37,9 @@ function createCustomServer(server, pathsAndMethods) {
         if (element.method === 'POST') {
             server.post(element.path, middleware);
         }
+        if (element.method === 'GET') {
+            server.get(element.path, middleware);
+        }
     });
 }
 
@@ -45,6 +48,7 @@ function middleware(request, response, next) {
         uri: request.url,
         method: request.method
     });
+
     response.send(200, 'OK');
     return next();
 }

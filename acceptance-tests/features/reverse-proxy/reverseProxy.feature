@@ -25,10 +25,11 @@ Feature: Reverse proxy
     Given the protected server has the following paths
       | path    | method |
       | /api/me | POST   |
+      | /api/me | GET    |
     And strajah is protecting the following path
       | protected path | allowed methods |
-      | /(.*)/         | POST            |
+      | /(.*)/         | GET             |
     When a client app does the following request
-      | path    | method | body          |
-      | /api/me | POST   | {"its": "me"} |
+      | path    | method |
+      | /api/me | GET    |
     Then strajah forwards it to the protected server

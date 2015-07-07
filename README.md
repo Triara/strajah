@@ -1,5 +1,7 @@
 # strajah
 
+[![Circle CI](https://circleci.com/gh/strajah/strajah.svg?style=svg)](https://circleci.com/gh/strajah/strajah)
+
 security layer
 
 ## Run tests
@@ -11,4 +13,4 @@ First install dependencies `npm install` and make sure to have a running mongo o
 npm test
 ```
 
-If you want to run only the unit tests `npm run mocha`
+If you want to run only the unit tests `npm run mocha

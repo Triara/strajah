@@ -37,7 +37,7 @@
     "debug": "2.1.1",
     "lodash": "3.1.0",
     "mongodb": "2.0.33",
-    "q": "1.1.2",
-    "request": "2.53.0"
+    "request": "2.53.0",
+    "ciphertoken": "git://github.com/Triara/ciphertoken"
   }
 }

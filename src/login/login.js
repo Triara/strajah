@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash'),
+    generateToken = require('./generateToken'),
     retrieveCustomers = require('./../storage/retrieveFromStorage.js');
 
 module.exports = login;
@@ -11,7 +12,6 @@ function login(request, response, next) {
             response.send(400);
             return next();
         }
-
 
         const authorizationHash = request.header('Authorization').split(' ')[1];
 
@@ -24,7 +24,7 @@ function login(request, response, next) {
             return next();
         }
 
-        const body = {accessToken: '123abc'};
+        const body = {accessToken: generateToken(userName)};
         response.json(200, body);
         return next();
     });

@@ -4,7 +4,6 @@ const mockery = require('mockery'),
     should = require('chai').should(),
     q = require('q'),
     sinon = require('sinon');
-require('chai').should();
 
 
 describe('Login route', () => {
@@ -117,13 +116,6 @@ describe('Login route', () => {
         }
     });
 
-    afterEach(() => {
-        mockery.deregisterAll();
-        mockery.disable();
-    });
-});
-
-describe('Login for registered customers with correct passwords', () => {
     it('has an accessToken property', done => {
         const request = mockRequest('username', 'pass123'),
             response = mockResponse();
@@ -135,6 +127,11 @@ describe('Login for registered customers with correct passwords', () => {
         let retrieveFromStorageStub = sinon.stub();
         retrieveFromStorageStub.returns(promise);
 
+        const falseToken = '123123abc';
+        let generateTokenStub = sinon.stub();
+        generateTokenStub.withArgs('username').returns(falseToken);
+
+        mockery.registerMock('./generateToken', generateTokenStub);
         const loginMiddleware = createLoginMiddleware(retrieveFromStorageStub);
         loginMiddleware(request, response, testChecks);
 
@@ -150,6 +147,7 @@ describe('Login for registered customers with correct passwords', () => {
             let body = responseSpy.args[0][1];
             should.exist(body);
             body.should.include.keys('accessToken');
+            body.accessToken.should.equal(falseToken);
             done();
         }
     });
@@ -189,6 +187,7 @@ describe('Login for registered customers with correct passwords', () => {
         mockery.disable();
     });
 });
+
 
 function mockRequest(name, password) {
     const basicAuthorization = new Buffer(name + ':' + password).toString('base64');

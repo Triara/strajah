@@ -9,6 +9,9 @@
     "mocha": "./node_modules/.bin/grunt mochacli",
     "cucumber": "node --harmony node_modules/.bin/grunt cucumber"
   },
+  "engine": {
+    "node": "0.12.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/strajah/strajah.git"

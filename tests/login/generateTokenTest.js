@@ -5,13 +5,21 @@ const mockery = require('mockery'),
     sinon = require('sinon');
 
 describe('Generate tokens', () => {
+    beforeEach(() =>{
+        mockery.enable({
+            useCleanCache: true,
+            warnOnReplace: false,
+            warnOnUnregistered: false
+        });
+    });
+
     it('should return tokens', () => {
         const falseToken = '123123abc';
         const ciphertokenMock = settings => {
             return {
                 create: {
                     userId: () => {return this;},
-                    encode: () => {return falseToken;}
+                    encode: () => {return {token: falseToken};}
                 }
             }
         };
@@ -19,7 +27,13 @@ describe('Generate tokens', () => {
         mockery.registerMock('ciphertoken', ciphertokenMock);
         const generateToken = require('../../src/login/generateToken.js');
 
-        should.exist(generateToken('user'));
+        const token = generateToken('user');
+        should.exist(token);
+        token.should.equal(falseToken);
+    });
+
+    afterEach(() => {
+        mockery.deregisterAll();
+        mockery.disable();
     });
 });
-

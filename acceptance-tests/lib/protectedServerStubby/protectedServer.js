@@ -28,6 +28,7 @@ module.exports = {
 };
 
 function createCustomServer(server, pathsAndMethods) {
+    performedCalls = [];
     server.get('/api/get-requests', (request, response, next) => {
         response.json(200, {items: performedCalls});
         return next();
@@ -44,6 +45,7 @@ function createCustomServer(server, pathsAndMethods) {
 }
 
 function middleware(request, response, next) {
+    console.log('>>> Request has reached the protected server')
     performedCalls.push({
         uri: request.url,
         method: request.method

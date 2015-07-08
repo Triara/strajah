@@ -6,21 +6,27 @@ const request = require('request'),
 require('chai').should();
 
 module.exports = () => {
-    this.When(/^a client app does the following request$/, (requestTable, done) => {
+    this.When(/^the customer does the following request$/, (requestTable, done) => {
+        const world = this;
+
         const requestData = requestTable.hashes()[0];
-        this.publishValue('requestPath', requestData.path);
+        world.publishValue('requestPath', requestData.path);
 
         let optionsForRequest = {
             url: testConfig.publicHost + ':' + testConfig.publicPort + requestData.path,
             json: true,
-            method: requestData.method
+            method: requestData.method,
+            headers: {
+                'Authorization': 'Bearer ' + JSON.parse(this.getValue('body')).accessToken
+            }
         };
+
         if (!_.isUndefined(requestData.body)) {
-            optionsForRequest.body =JSON.parse(requestData.body);
+            optionsForRequest.body = JSON.parse(requestData.body);
         }
 
         request(optionsForRequest, (error, response) => {
-            response.statusCode.should.equal(200);
+            world.publishValue('statusCode', response.statusCode);
             done();
         });
     });

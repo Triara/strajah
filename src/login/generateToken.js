@@ -9,5 +9,5 @@ const accessTokenCreator = ciphertoken({
 });
 
 module.exports = username => {
-    return accessTokenCreator.create.userId(username).encode();
+    return accessTokenCreator.create.userId(username).encode().token;
 };

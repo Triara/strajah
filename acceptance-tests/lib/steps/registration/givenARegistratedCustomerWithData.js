@@ -7,7 +7,12 @@ const request = require('request'),
 
 module.exports = () => {
     this.Given(/^a registered customer with data$/, (registrationDataTable, done) => {
-        let registrationData = registrationDataTable.hashes()[0];
+        const registrationData = registrationDataTable.hashes()[0];
+
+        this.publishValue('userCredentials', {
+            name: registrationData['user name'],
+            password: registrationData['password']
+        });
 
         request({
             uri: testConfig.publicHost + ':' + testConfig.publicPort + '/auth/users',

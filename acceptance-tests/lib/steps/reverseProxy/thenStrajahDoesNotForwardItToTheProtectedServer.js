@@ -5,13 +5,14 @@ const _ = require('lodash'),
 require('chai').should();
 
 module.exports = () => {
-    this.Then(/^strajah forwards it to the protected server$/, done => {
+    this.Then(/^strajah does not forward it to the protected server$/, done => {
         const protectedPath = this.getValue('requestPath');
 
         getProtectedServerCalls((error, response, body) => {
-            _.includes(_.map(body.items, performedCall => {
+
+            _.difference(_.map(body.items, performedCall => {
                 return performedCall.uri
-            }), protectedPath);
+            }), protectedPath).should.deep.equal([]);
 
             done();
         });

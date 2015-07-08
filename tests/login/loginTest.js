@@ -7,9 +7,9 @@ const mockery = require('mockery'),
 require('chai').should();
 
 
-describe('Login response code', () => {
+describe('Login route', () => {
     it('must call the next function', () => {
-        const request = mockRequest(),
+        const request = mockRequest('username', 'pass123'),
             response = mockResponse();
 
         let deferred = q.defer();
@@ -24,15 +24,15 @@ describe('Login response code', () => {
         const loginMiddleware = createLoginMiddleware(retrieveFromStorageStub);
         loginMiddleware(request, response, nextMock);
 
-        deferred.resolve(createStorageResponse(request));
+        deferred.resolve(createStorageResponse('username', 'pass123'));
 
         return promise.then(() => {
             nextMock.verify();
         });
     });
 
-    it('must send back a response', () => {
-        const request = mockRequest(),
+    it('must send back a response', done => {
+        const request = mockRequest('username', 'pass123'),
             response = mockResponse();
         let responseSpy = sinon.spy(response, 'json');
 
@@ -43,10 +43,12 @@ describe('Login response code', () => {
         retrieveFromStorageStub.returns(promise);
 
         const loginMiddleware = createLoginMiddleware(retrieveFromStorageStub);
-        loginMiddleware(request, response, () => {});
+        loginMiddleware(request, response, testChecks);
 
-        let fulfilledPromise = promise.then(() => {
-            responseSpy.calledOnce.should.be.true;
+        deferred.resolve(createStorageResponse('username', 'pass123'));
+
+        function testChecks () {
+            responseSpy.calledOnce.should.equal(true);
 
             let statusCode = responseSpy.args[0][0];
             should.exist(statusCode);
@@ -54,15 +56,12 @@ describe('Login response code', () => {
 
             let body = responseSpy.args[0][1];
             should.exist(body);
-        });
-
-        deferred.resolve(createStorageResponse(request));
-
-        return fulfilledPromise;
+            done();
+        }
     });
 
-    it('if no customer is returned a 401 Unauthorized is sent back', () => {
-        const request = mockRequest(),
+    it('if no customer is returned a 401 Unauthorized is sent back', done => {
+        const request = mockRequest('username', 'pass123'),
             response = mockResponse();
         let responseSpy = sinon.spy(response, 'send');
 
@@ -73,10 +72,12 @@ describe('Login response code', () => {
         retrieveFromStorageStub.returns(promise);
 
         const loginMiddleware = createLoginMiddleware(retrieveFromStorageStub);
-        loginMiddleware(request, response, () => {});
+        loginMiddleware(request, response, testChecks);
 
-        const fulfilledPromise = promise.then(() => {
-            responseSpy.calledOnce.should.be.true;
+        deferred.resolve(null);
+
+        function testChecks() {
+            responseSpy.calledOnce.should.equal(true);
 
             const statusCode = responseSpy.args[0][0];
             should.exist(statusCode);
@@ -84,24 +85,16 @@ describe('Login response code', () => {
 
             const body = responseSpy.args[0][1];
             should.not.exist(body);
-        });
-
-        deferred.resolve(null);
-
-        return fulfilledPromise;
+            done();
+        }
     });
 
-    afterEach(() => {
-        mockery.deregisterAll();
-        mockery.disable();
-    });
-});
+    it('400 (bad request) if authorization header is not a of type basic', done => {
+        const response = mockResponse();
+        let responseSpy = sinon.spy(response, 'send');
 
-describe('Login response body', () => {
-    it('has an accessToken property', () => {
-        const request = mockRequest(),
-            response = mockResponse();
-        let responseSpy = sinon.spy(response, 'json');
+        let request = mockRequest('username', 'pass123');
+        request.headers.Authorization = 'Some other type';
 
         let deferred = q.defer();
         let promise = deferred.promise;
@@ -110,23 +103,18 @@ describe('Login response body', () => {
         retrieveFromStorageStub.returns(promise);
 
         const loginMiddleware = createLoginMiddleware(retrieveFromStorageStub);
-        loginMiddleware(request, response, () => {});
+        loginMiddleware(request, response, testChecks);
 
-        let fulfilledPromise = promise.then(() => {
-            responseSpy.calledOnce.should.be.true;
+        deferred.resolve(null);
 
-            let statusCode = responseSpy.args[0][0];
+        function testChecks() {
+            responseSpy.calledOnce.should.equal(true);
+
+            const statusCode = responseSpy.args[0][0];
             should.exist(statusCode);
-            statusCode.should.deep.equal(200);
-
-            let body = responseSpy.args[0][1];
-            should.exist(body);
-            body.should.include.keys('accessToken');
-        });
-
-        deferred.resolve(createStorageResponse(request));
-
-        return fulfilledPromise;
+            statusCode.should.deep.equal(400);
+            done();
+        }
     });
 
     afterEach(() => {
@@ -136,8 +124,38 @@ describe('Login response body', () => {
 });
 
 describe('Login for registered customers with correct passwords', () => {
-    it('Return a 401 if password is incorrect', () => {
-        const request = mockRequest(),
+    it('has an accessToken property', done => {
+        const request = mockRequest('username', 'pass123'),
+            response = mockResponse();
+        let responseSpy = sinon.spy(response, 'json');
+
+        let deferred = q.defer();
+        let promise = deferred.promise;
+
+        let retrieveFromStorageStub = sinon.stub();
+        retrieveFromStorageStub.returns(promise);
+
+        const loginMiddleware = createLoginMiddleware(retrieveFromStorageStub);
+        loginMiddleware(request, response, testChecks);
+
+        deferred.resolve(createStorageResponse('username', 'pass123'));
+
+        function testChecks() {
+            responseSpy.calledOnce.should.equal(true);
+
+            let statusCode = responseSpy.args[0][0];
+            should.exist(statusCode);
+            statusCode.should.deep.equal(200);
+
+            let body = responseSpy.args[0][1];
+            should.exist(body);
+            body.should.include.keys('accessToken');
+            done();
+        }
+    });
+
+    it('Return a 401 if password is incorrect', done => {
+        const request = mockRequest('username', 'pass123'),
             response = mockResponse();
 
         let deferred = q.defer();
@@ -149,13 +167,7 @@ describe('Login for registered customers with correct passwords', () => {
         let responseSpy = sinon.spy(response, 'send');
 
         const loginMiddleware = createLoginMiddleware(retrieveFromStorageStub);
-        loginMiddleware(request, response, () => {
-        });
-
-        const fulfilledPromise = promise.then(() => {
-            const statusCode = responseSpy.args[0][0];
-            statusCode.should.deep.equal(401);
-        });
+        loginMiddleware(request, response, testChecks);
 
         const storageResponse = [
             {
@@ -165,7 +177,11 @@ describe('Login for registered customers with correct passwords', () => {
         ];
         deferred.resolve(storageResponse);
 
-        return fulfilledPromise;
+        function testChecks() {
+            const statusCode = responseSpy.args[0][0];
+            statusCode.should.deep.equal(401);
+            done();
+        }
     });
 
     afterEach(() => {
@@ -174,20 +190,23 @@ describe('Login for registered customers with correct passwords', () => {
     });
 });
 
-function mockRequest() {
+function mockRequest(name, password) {
+    const basicAuthorization = new Buffer(name + ':' + password).toString('base64');
     return {
         params: {},
-        body: {
-            name: 'User1',
-            password: '123Password'
+        headers: {
+            'Authorization': 'Basic ' + basicAuthorization
+        },
+        header: headerName => {
+            return this.headers[headerName];
         }
     };
 }
 
-function createStorageResponse(request) {
+function createStorageResponse(name, password) {
     return {
-        name: request.body.name,
-        password: request.body.password
+        name: name,
+        password: password
     };
 }
 

@@ -9,12 +9,14 @@ module.exports = function (customerName, password, callback) {
     request({
         uri: testConfig.publicHost + ':' + testConfig.publicPort + '/auth/login',
         method: 'POST',
-        json: true,
-        body: {
-            'name': customerName,
-            'password': password
+        headers: {
+            'Authorization': 'Basic ' + createBasicAuthorization(customerName, password)
         }
     }, function (err, response, body) {
         callback(err, response, body);
     });
 };
+
+function createBasicAuthorization(name, password) {
+    return new Buffer(name + ':' + password).toString('base64');
+}

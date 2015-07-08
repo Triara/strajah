@@ -2,7 +2,7 @@
   "name": "strajah",
   "version": "1.0.0",
   "description": "security layer",
-  "main": "lib/strajah.js",
+  "main": "src/server.js",
   "scripts": {
     "start": "node --harmony src/index.js",
     "test": "npm run-script mocha && npm run-script cucumber",

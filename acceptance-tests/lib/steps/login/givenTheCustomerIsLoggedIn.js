@@ -14,7 +14,6 @@ module.exports = () => {
 
 function saveResponse(world, done, error, response, body) {
     should.not.exist(error);
-
     world.publishValue('statusCode', response.statusCode);
     world.publishValue('body', body);
     done();

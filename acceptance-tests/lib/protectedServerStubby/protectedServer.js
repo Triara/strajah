@@ -18,11 +18,11 @@ module.exports = {
     create: _.partial(createCustomServer, server),
     start: callback => {
         console.log('Starting protected server stubby at port ' + proxyConfig.protectedServer.port);
-        server.listen(proxyConfig.protectedServer.port, callback)
+        server.listen(proxyConfig.protectedServer.port, callback);
     },
     stop: callback => {
         console.log('Stopping protected server');
-        server.close(callback)
+        server.close(callback);
     }
 
 };
@@ -45,10 +45,10 @@ function createCustomServer(server, pathsAndMethods) {
 }
 
 function middleware(request, response, next) {
-    console.log('>>> Request has reached the protected server')
     performedCalls.push({
         uri: request.url,
-        method: request.method
+        method: request.method,
+        user: request.header('Authorization').split(' ')[1]
     });
 
     response.send(200, 'OK');

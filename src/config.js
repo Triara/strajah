@@ -9,7 +9,7 @@ module.exports = {
         collectionName: 'customers'
     },
     tokens: {
-        cipherKey: process.env['STRAJAH_CIPHER_KEY'] || 'cipherkey-change!!',
-        firmKey: process.env['STRAJAH_FIRM_KEY'] || 'firmkey-change!!'
+        cipherKey: process.env['STRAJAH_CIPHER_KEY'] || 'myCipherKey123',
+        firmKey: process.env['STRAJAH_FIRM_KEY'] || 'myFirmKey123'
     }
 };

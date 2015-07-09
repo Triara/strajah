@@ -6,7 +6,7 @@ const request = require('request'),
 require('chai').should();
 
 module.exports = () => {
-    this.When(/^a not logged in customer does the following request$/, (requestTable, done) => {
+    this.When(/^a not logged in customer does the following request to strajah$/, (requestTable, done) => {
         const world = this;
         const requestData = requestTable.hashes()[0];
         world.publishValue('requestPath', requestData.path);

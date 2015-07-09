@@ -18,10 +18,10 @@ Feature: Reverse proxy
       | user name | password |
       | Ironman   | Av3ng3Rs |
     And the customer is logged in
-    When the customer does the following request
+    When the customer does the following request to strajah
       | path    | method | body          |
       | /api/me | POST   | {"its": "me"} |
-    Then strajah forwards it to the protected server
+    Then the protected server receives the request from user "Ironman"
 
 
   @loadCustomConfig
@@ -38,10 +38,10 @@ Feature: Reverse proxy
       | user name | password |
       | Ironman   | Av3ng3Rs |
     And the customer is logged in
-    When the customer does the following request
+    When the customer does the following request to strajah
       | path    | method |
       | /api/me | GET    |
-    Then strajah forwards it to the protected server
+    Then the protected server receives the request from user "Ironman"
 
 
   @loadCustomConfig
@@ -54,7 +54,7 @@ Feature: Reverse proxy
     And strajah is protecting the following path
       | protected path | allowed methods |
       | /(.*)/         | GET             |
-    When a not logged in customer does the following request
+    When a not logged in customer does the following request to strajah
       | path    | method |
       | /api/me | GET    |
     Then the response code must be 401

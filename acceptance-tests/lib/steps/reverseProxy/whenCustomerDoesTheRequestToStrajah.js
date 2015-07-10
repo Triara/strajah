@@ -25,8 +25,9 @@ module.exports = () => {
             optionsForRequest.body = JSON.parse(requestData.body);
         }
 
-        request(optionsForRequest, (error, response) => {
+        request(optionsForRequest, (error, response, body) => {
             world.publishValue('statusCode', response.statusCode);
+            world.publishValue('body', body);
             done();
         });
     });

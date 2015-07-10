@@ -38,7 +38,7 @@ function proxy(proxyConfig, incomingRequest, response, next) {
             'Authorization': 'User ' + authorizationTokenSet.userId
         }
     }, function (error, receivedResponse, body) {
-        response.send(200, body);
+        response.send(receivedResponse.statusCode, body);
         return next();
     });
 }

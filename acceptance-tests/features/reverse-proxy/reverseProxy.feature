@@ -9,8 +9,8 @@ Feature: Reverse proxy
   @protectedServer
   Scenario: A request to protected server is intercepted
     Given the protected server has the following paths
-      | path    | method |
-      | /api/me | POST   |
+      | path    | method | statusCode | response              |
+      | /api/me | POST   | 201        | {"status": "created"} |
     And strajah is protecting the following path
       | protected path | allowed methods |
       | /api/me        | POST            |
@@ -26,11 +26,32 @@ Feature: Reverse proxy
 
   @loadCustomConfig
   @protectedServer
+  Scenario: Strajah returns the response and the status code of the protected server
+    Given the protected server has the following paths
+      | path    | method | statusCode | response              |
+      | /api/me | POST   | 201        | {"status": "created"} |
+    And strajah is protecting the following path
+      | protected path | allowed methods |
+      | /api/me        | POST            |
+    And a registered customer with data
+      | user name | password |
+      | Ironman   | Av3ng3Rs |
+    And the customer is logged in
+    When the customer does the following request to strajah
+      | path    | method | body          |
+      | /api/me | POST   | {"its": "me"} |
+    Then the response code must be 201
+    And the response body is {"status": "created"}
+
+
+
+  @loadCustomConfig
+  @protectedServer
   Scenario: Strajah protects paths using a regexp
     Given the protected server has the following paths
-      | path    | method |
-      | /api/me | POST   |
-      | /api/me | GET    |
+      | path    | method | statusCode | response              |
+      | /api/me | POST   | 201        | {"status": "created"} |
+      | /api/me | GET    | 200        |                       |
     And strajah is protecting the following path
       | protected path | allowed methods |
       | /(.*)/         | GET             |
@@ -48,9 +69,9 @@ Feature: Reverse proxy
   @protectedServer
   Scenario: Strajah does not let not logged users to access protects paths
     Given the protected server has the following paths
-      | path    | method |
-      | /api/me | POST   |
-      | /api/me | GET    |
+      | path    | method | statusCode | response              |
+      | /api/me | POST   | 201        | {"status": "created"} |
+      | /api/me | GET    | 200        |                       |
     And strajah is protecting the following path
       | protected path | allowed methods |
       | /(.*)/         | GET             |

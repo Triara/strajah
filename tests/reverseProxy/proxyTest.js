@@ -16,7 +16,7 @@ describe('Reverse proxy', () => {
         nextMock.once();
 
         const requestStub = (options, callback) => {
-            callback();
+            callback(null, {statusCode: 200});
         };
 
         const proxyMiddleware = _.partial(createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman')), proxyConfig);
@@ -34,7 +34,7 @@ describe('Reverse proxy', () => {
         let usedOptionsForRequest;
         const requestStub = (options, callback) => {
             usedOptionsForRequest = options;
-            callback();
+            callback(null, {statusCode: 200});
         };
 
         const proxyMiddleware = _.partial(createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman')), proxyConfigWithValidPath);
@@ -63,7 +63,7 @@ describe('Reverse proxy', () => {
         let usedOptionsForRequest;
         const requestStub = (options, callback) => {
             usedOptionsForRequest = options;
-            callback();
+            callback(null, {statusCode: 200});
         };
 
         const proxy = createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman'));
@@ -90,7 +90,7 @@ describe('Reverse proxy', () => {
         proxyConfigWithInvalidPath.paths[0].path = request.url + '-invalid';
 
         const requestStub = (options, callback) => {
-            callback();
+            callback(null, {statusCode: 200});
         };
 
         const proxyMiddleware = _.partial(createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman')), proxyConfigWithInvalidPath);
@@ -193,7 +193,7 @@ describe('Reverse proxy includes a header with the username', () => {
         let usedOptionsForRequest = {};
         const requestStub = (options, callback) => {
             usedOptionsForRequest = options;
-            callback();
+            callback(null, {statusCode: 200});
         };
 
         let proxyConfigWithValidPath = _.cloneDeep(proxyConfig);
@@ -249,6 +249,45 @@ describe('Reverse proxy includes a header with the username', () => {
 });
 
 
+
+describe('the reverse proxy returns the response from the protected server', () => {
+    it('the status code & body should be returned back', done => {
+        const request = mockRequest(),
+            response = mockResponse();
+        let responseSpy = sinon.spy(response, 'send');
+
+        let proxyConfigWithValidPath = _.cloneDeep(proxyConfig);
+        proxyConfigWithValidPath.paths[0].path = request.url;
+
+        const  responseStub = {
+            statusCode: 222
+        };
+        const bodyStub = "{\"Something\": \"in here\"}";
+
+        const requestStub = (options, callback) => {
+            callback(null, responseStub, bodyStub);
+        };
+
+        const proxyMiddleware = _.partial(createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman')), proxyConfigWithValidPath);
+        proxyMiddleware(request, response, testChecks);
+
+
+        function testChecks() {
+            responseSpy.calledOnce.should.equal(true);
+            responseSpy.firstCall.args[0].should.equal(responseStub.statusCode);
+            responseSpy.firstCall.args[1].should.deep.equal(bodyStub);
+            done();
+        }
+    });
+
+    afterEach(() => {
+        mockery.deregisterAll();
+        mockery.disable();
+    });
+});
+
+
+
 function createProxyMiddleware(requestMock, decodeTokenStub) {
     mockery.registerMock('request', requestMock);
     mockery.registerMock('./decodeToken', decodeTokenStub);
@@ -261,7 +300,6 @@ function createProxyMiddleware(requestMock, decodeTokenStub) {
 
     return require('../../src/reverseProxy/proxy.js');
 }
-
 
 function mockRequest () {
     return {

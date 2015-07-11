@@ -1,7 +1,7 @@
 'use strict';
 
 const ciphertoken = require('ciphertoken'),
-    config = require(process.cwd() + '/src/config');
+    config = require('../config');
 
 const accessTokenCreator = ciphertoken({
     cipherKey: config.tokens.cipherKey,

@@ -2,7 +2,7 @@
 
 const ciphertoken = require('ciphertoken'),
     _ = require('lodash'),
-    config = require(process.cwd() + '/src/config');
+    config = require('../config');
 
 const tokenDecoder = ciphertoken({
     cipherKey: config.tokens.cipherKey,

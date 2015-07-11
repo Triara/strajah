@@ -47,7 +47,7 @@ describe('Persist on storage', () => {
         const dataToPersist = {some: 'data'};
 
         return persistOnStorage(dataToPersist).then(() => {
-            dbConnectedToUrl.should.equal('mongodb://' + config.database.host + ':' + config.database.port + '/' + config.database.name + '?w=1');
+            dbConnectedToUrl.should.equal(config.database.uri + '?w=1');
             usedCollectionName.should.equal(config.database.collectionName);
             dataSentToPersist.should.deep.equal(dataToPersist);
         });

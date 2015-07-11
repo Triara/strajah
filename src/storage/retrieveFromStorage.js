@@ -3,7 +3,7 @@
 const mongoClient = require('mongodb').MongoClient,
     config = require('../config.js');
 
-const url = 'mongodb://' + config.database.host + ':' + config.database.port + '/' + config.database.name;
+const url = config.database.uri;
 
 module.exports = filter => {
     return new Promise((resolve, reject) => {

@@ -3,7 +3,7 @@
 const mongoClient = require('mongodb').MongoClient,
     config = require('../config.js');
 
-const url = 'mongodb://' + config.database.host + ':' + config.database.port + '/' + config.database.name + '?w=1';
+const url = config.database.uri + '?w=1';
 
 module.exports = dataToPersist => {
     return new Promise((resolve, reject) => {

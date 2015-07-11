@@ -3,10 +3,8 @@
 module.exports = {
 	publicPort: 3000,
 	database: {
-		host: process.env['STRAJAH_MONGO_HOST'] || 'localhost',
-		port: process.env['STRAJAH_MONGO_PORT'] ||  27017,
-		name: process.env['STRAJAH_MONGO_DB_NAME'] || 'strajah',
-		collectionName: process.env['STRAJAH_MONGO_DB_COLLECTION'] || 'users'
+		uri : process.env['STRAJAH_MONGO_URI'] ||'mongodb://localhost:27017/strajah',
+		collectionName: process.env['STRAJAH_MONGO_COLLECTION'] || 'users'
 	},
 	tokens: {
 		cipherKey: process.env['STRAJAH_CIPHER_KEY'] || 'myCipherKey123',

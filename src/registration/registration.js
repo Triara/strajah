@@ -1,26 +1,22 @@
 'use strict';
 
-const retrieveCustomers = require('./../storage/retrieveFromStorage.js'),
+const retrieveCustomer = require('./../storage/retrieveFromStorage.js'),
     persistOnStorage = require('./../storage/persistOnStorage.js'),
     _ = require('lodash');
 
 module.exports = (request, response, next) => {
-    retrieveCustomers().then(customers => {
-        if (_.isEmpty(request.body.name)) {
-            response.json(400, 'missing name property');
-            return next();
-        }
+    if (_.isEmpty(request.body.name)) {
+        response.json(400, 'missing name property');
+        return next();
+    }
 
-        if (_.isEmpty(request.body.password)) {
-            response.json(400, 'missing password property');
-            return next();
-        }
+    if (_.isEmpty(request.body.password)) {
+        response.json(400, 'missing password property');
+        return next();
+    }
 
-        let filteredCustomers = _.filter(customers, retrievedCustomer => {
-            return retrievedCustomer.name === request.body.name;
-        });
-
-        if (!_.isEmpty(filteredCustomers)) {
+    retrieveCustomer({name:request.body.name}).then(customer => {
+        if (!_.isEmpty(customer)) {
             response.json(400, 'user already exist');
             return next();
         }

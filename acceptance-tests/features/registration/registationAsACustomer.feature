@@ -14,6 +14,21 @@ Feature: Registration for a new customer
       | user name | password |
       | Ironman   | Av3ng3Rs |
 
+  Scenario: Allows registration of more than one user
+    When a not registered user requests to register with data
+      | user name | password |
+      | Ironman   | Av3ng3Rs |
+    And a not registered user requests to register with data
+      | user name | password |
+      | Hulk      | Av3ng3Rs |
+    Then the response code must be 201
+    And the customer is able to log in with his credentials
+      | user name | password |
+      | Ironman   | Av3ng3Rs |
+    And the customer is able to log in with his credentials
+      | user name | password |
+      | Hulk      | Av3ng3Rs |
+
 @pending
     Scenario: Unsuccessful registration - already registered customer with the same name
       Given a registered customer with data

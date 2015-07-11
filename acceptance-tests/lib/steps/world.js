@@ -17,13 +17,7 @@ const World = function (callback) {
     });
 
     function publishValue(name, value) {
-        if (_.isObject(sandbox[name]) && _.isObject(value)) {
-            return sandbox[name] = _.assign(sandbox[name], value)
-        }
-        let newProperties = {};
-        newProperties[name] = value;
-
-        sandbox = _.assign(sandbox, newProperties);
+        sandbox[name] = value;
     }
 
     function getValue(name) {

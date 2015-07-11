@@ -58,7 +58,7 @@ describe('Decode tokens', () => {
 });
 
 function createDecodeToken(ciphertokenStub) {
-    mockery.registerMock('ciphertoken', ciphertokenStub);
+    mockery.registerMock('strajah-token', ciphertokenStub);
 
     mockery.enable({
         useCleanCache: true,

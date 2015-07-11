@@ -24,7 +24,7 @@ describe('Generate tokens', () => {
             }
         };
 
-        mockery.registerMock('ciphertoken', ciphertokenMock);
+        mockery.registerMock('strajah-token', ciphertokenMock);
         const generateToken = require('../../src/login/generateToken.js');
 
         const token = generateToken('user');

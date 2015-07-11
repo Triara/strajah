@@ -7,7 +7,7 @@ const should = require('chai').should(),
     _ = require('lodash');
 
 
-describe('Reverse proxy', () => {
+describe.only('Reverse proxy', () => {
     it('must call the next function', done => {
         const request = mockRequest(),
             response = mockResponse();
@@ -49,39 +49,67 @@ describe('Reverse proxy', () => {
         }
     });
 
-    it('protected paths can be regexp', done => {
-        const response = mockResponse();
-        let request = mockRequest();
+	it('protected paths can be regexp', done => {
+		const response = mockResponse();
+		let request = mockRequest();
 
-        request.url = 'pppppp123';
-        const regexpAsProtectedPath = /p*123/;
+		request.url = '/path/AbCdEf/valid';
+		const regexpAsProtectedPath = /\/path\/[a-z,A-Z]*\/valid/;
 
-        let configWithValidPath = _.cloneDeep(config);
-        configWithValidPath.proxy.paths[0].path = regexpAsProtectedPath;
+		let configWithValidPath = _.cloneDeep(config);
+		configWithValidPath.proxy.paths[0].path = regexpAsProtectedPath;
 
-        let usedOptionsForRequest;
-        const requestStub = (options, callback) => {
-            usedOptionsForRequest = options;
-            callback(null, {statusCode: 200});
-        };
+		let usedOptionsForRequest;
+		const requestStub = (options, callback) => {
+			usedOptionsForRequest = options;
+			callback(null, {statusCode: 200});
+		};
 
-        const proxy = createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman'), configWithValidPath);
-        proxy(request, response, testChecks);
+		const proxy = createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman'), configWithValidPath);
+		proxy(request, response, testChecks);
 
-        function testChecks () {
-            const expectedURL = configWithValidPath.proxy.protectedServer.host + ':' + configWithValidPath.proxy.protectedServer.port + request.url;
-            usedOptionsForRequest.url.should.deep.equal(expectedURL);
+		function testChecks () {
+			const expectedURL = configWithValidPath.proxy.protectedServer.host + ':' + configWithValidPath.proxy.protectedServer.port + request.url;
+			usedOptionsForRequest.url.should.deep.equal(expectedURL);
 
-            usedOptionsForRequest.body.should.deep.equal(request.body);
-            usedOptionsForRequest.method.should.deep.equal(request.method);
-            done();
-        }
-    });
+			usedOptionsForRequest.body.should.deep.equal(request.body);
+			usedOptionsForRequest.method.should.deep.equal(request.method);
+			done();
+		}
+	});
 
-    it('should not forward not protected paths', done => {
+	it('should not forward if path is not fully matched in regexp', done => {
+		const response = mockResponse();
+		let request = mockRequest();
+		let responseSpy = sinon.spy(response, 'json');
+
+		request.url = '/path/AbCdEf/invalid';
+		const regexpAsProtectedPath = /\/path\/[a-z,A-Z]*/;
+
+		let configWithValidPath = _.cloneDeep(config);
+		configWithValidPath.proxy.paths[0].path = regexpAsProtectedPath;
+
+		let usedOptionsForRequest;
+		const requestStub = (options, callback) => {
+			usedOptionsForRequest = options;
+			callback(null, {statusCode: 200});
+		};
+
+		const proxy = createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman'), configWithValidPath);
+		proxy(request, response, testChecks);
+
+		function testChecks () {
+			const statusCode = responseSpy.args[0][0];
+			should.exist(statusCode);
+			statusCode.should.deep.equal(403);
+			done();
+		}
+	});
+
+	it('should not forward not protected paths', done => {
         const request = mockRequest(),
             response = mockResponse();
-        let responseSpy = sinon.spy(response, 'send');
+        let responseSpy = sinon.spy(response, 'json');
 
         let configWithInvalidPath = _.cloneDeep(config);
         configWithInvalidPath.proxy.paths[0].path = request.url + '-invalid';

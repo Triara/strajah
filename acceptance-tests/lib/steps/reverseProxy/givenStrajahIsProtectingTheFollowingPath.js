@@ -9,8 +9,13 @@ module.exports = () => {
         const protectedPaths = protectedPathsTable.hashes()[0];
 
         let customProxyConfig = _.cloneDeep(config);
+		var regex = protectedPaths['protected path'];
+		if(_.startsWith(regex,'/') &&_.endsWith(regex,'/')){
+			regex = new RegExp(regex.substr(1, regex.length-2))
+		}
+		console.log(regex);
         customProxyConfig.paths[0] = {
-            path: protectedPaths['protected path'],
+            path: regex,
             methods: protectedPaths['allowed methods']
         };
         let customConfig = {

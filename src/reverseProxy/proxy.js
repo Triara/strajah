@@ -24,11 +24,18 @@ function proxy(incomingRequest, response, next) {
 		return next();
 	}
 
-	const foundCoincidences = _.filter(proxyConfig.paths, protectedUri => {
-		return incomingRequest.url.match(protectedUri.path);
+	const foundCoincidence = _.find(proxyConfig.paths, protectedUri => {
+		var regex =  RegExp(protectedUri.path);
+		var match = incomingRequest.url.match(regex);
+
+		if(!_.isEmpty(match)){
+			return match[0] == incomingRequest.url;
+		}
+		return false;
 	});
-	if (foundCoincidences.length === 0) {
-		response.send(403);
+
+	if (_.isEmpty(foundCoincidence)) {
+		response.json(403, 'path not allowed');
 		return next();
 	}
 

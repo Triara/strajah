@@ -52,7 +52,6 @@ function middleware(statusCode, responseBody, request, response, next) {
 
     response.json(parseInt(statusCode), createBodyToSendBack(responseBody));
 
-    console.log('==> Returning response from the protected server');
     return next();
 }
 

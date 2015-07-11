@@ -64,7 +64,7 @@ describe('Registration route should be available', () => {
         });
     });
 
-    it('Should return 401 when a customer exists with the same name', () => {
+    it('Should return 400 when a customer exists with the same name', () => {
         const request = mockRequest(),
             response = mockResponse();
 
@@ -81,7 +81,7 @@ describe('Registration route should be available', () => {
 
         let fulfilledPromise = promise.then(() => {
             let statusCode = responseSpy.args[0][0];
-            statusCode.should.deep.equal(401);
+            statusCode.should.deep.equal(400);
         });
 
         let storageResponse = [

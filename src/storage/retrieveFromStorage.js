@@ -9,6 +9,9 @@ module.exports = filter => {
     return new Promise((resolve, reject) => {
 
         mongoClient.connect(url, (err, db) => {
+            if(err) {
+                return reject(Error(err));
+            }
 
             const collection = db.collection(config.database.collectionName);
 

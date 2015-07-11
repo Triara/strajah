@@ -3,7 +3,7 @@
 module.exports = {
 	publicPort: 3000,
 	database: {
-		uri : process.env['STRAJAH_MONGO_URI'] ||'mongodb://localhost:27017/strajah',
+		uri : process.env['STRAJAH_MONGO_URI'] || 'mongodb://localhost:27017/strajah',
 		collectionName: process.env['STRAJAH_MONGO_COLLECTION'] || 'users'
 	},
 	tokens: {

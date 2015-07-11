@@ -21,7 +21,7 @@ module.exports = (request, response, next) => {
         });
 
         if (!_.isEmpty(filteredCustomers)) {
-            response.json(401);
+            response.json(400, 'user already exist');
             return next();
         }
 

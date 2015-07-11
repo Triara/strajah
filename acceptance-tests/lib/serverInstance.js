@@ -9,10 +9,8 @@ module.exports = (() => {
     let serverInstance;
 
     return {
-        registerServices: customProxyConfig => {
-            serverInstance = strajah.create();
-
-            registerServices(serverInstance, customProxyConfig);
+        create: customConfig => {
+            serverInstance = strajah.create(customConfig);
         },
         start: done => {
             strajah.start(serverInstance, config.publicPort, done);

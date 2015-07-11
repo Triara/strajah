@@ -1,6 +1,8 @@
 'use strict';
 
 const restify = require('restify');
+const _ = require('lodash');
+const defaultConfig = require('./config.js');
 
 module.exports = {
     create: create,
@@ -8,13 +10,19 @@ module.exports = {
     stop: stop
 };
 
-function create(){
-    let server = restify.createServer({
+function create(customConfig){
+	customConfig = customConfig || {};
+	_.defaults(customConfig, defaultConfig);
+
+	let server = restify.createServer({
         name: 'Strajah security layer'
     });
 
     server.use(restify.queryParser());
     server.use(restify.bodyParser());
+
+	const registerServices = require('./registerServices');
+	registerServices(server, customConfig);
 
     return server;
 }

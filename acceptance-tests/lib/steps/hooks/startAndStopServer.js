@@ -6,7 +6,7 @@ require('chai').should();
 
 module.exports = () => {
     this.Before("~@loadCustomConfig", done => {
-        this.serverInstance.registerServices();
+        this.serverInstance.create();
         this.serverInstance.start(done);
     });
 

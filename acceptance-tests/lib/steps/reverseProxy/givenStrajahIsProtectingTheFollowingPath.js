@@ -13,8 +13,11 @@ module.exports = () => {
             path: protectedPaths['protected path'],
             methods: protectedPaths['allowed methods']
         };
+        let customConfig = {
+            proxy : customProxyConfig
+        };
 
-        this.serverInstance.registerServices(customProxyConfig);
+        this.serverInstance.create(customConfig);
         this.serverInstance.start(done);
     });
 };

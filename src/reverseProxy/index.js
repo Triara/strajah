@@ -1,14 +1,13 @@
 'use strict';
 
-const reverseProxy = require('./proxy.js'),
-    _ = require('lodash');
+const _ = require('lodash');
 
 module.exports = {
     registerIn: registerIn
 };
 
-function registerIn (server, customConfig) {
-    let proxyMiddleware = _.partial(reverseProxy, customConfig);
-    server.post('/(.*)/', proxyMiddleware);
-    server.get('/(.*)/', proxyMiddleware);
+function registerIn (server, customCofig) {
+    const reverseProxy = require('./proxy.js')(customCofig);
+    server.post('/(.*)/', reverseProxy);
+    server.get('/(.*)/', reverseProxy);
 }

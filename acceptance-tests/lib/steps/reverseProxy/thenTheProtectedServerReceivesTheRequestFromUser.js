@@ -2,7 +2,7 @@
 
 const _ = require('lodash'),
     getProtectedServerCalls = require('../../protectedServerStubby/getProtectedServerCalls.js');
-require('chai').should();
+const should = require('chai').should();
 
 module.exports = () => {
     this.Then(/^the protected server receives the request from user "([^"]*)"$/, (expectedUser, done) => {
@@ -16,6 +16,7 @@ module.exports = () => {
                 return accumulated || actualElement;
             });
 
+			should.exist(foundRequest);
             foundRequest.should.equal(true);
             done();
         });

@@ -2,7 +2,7 @@
 
 const should = require('chai').should(),
     sinon = require('sinon'),
-    proxyConfig = require('../../src/config.js').proxy,
+    config = require('../../src/config.js'),
     mockery = require('mockery'),
     _ = require('lodash');
 
@@ -19,7 +19,7 @@ describe('Reverse proxy', () => {
             callback(null, {statusCode: 200});
         };
 
-        const proxyMiddleware = _.partial(createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman')), proxyConfig);
+        const proxyMiddleware = createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman'), config);
         proxyMiddleware(request, response, done);
     });
 
@@ -27,9 +27,8 @@ describe('Reverse proxy', () => {
         const request = mockRequest(),
             response = mockResponse();
 
-        let proxyConfigWithValidPath = _.cloneDeep(proxyConfig);
-        proxyConfigWithValidPath.paths[0].path = request.url;
-
+        let configWithValidPath = _.cloneDeep(config);
+        configWithValidPath.proxy.paths[0].path = request.url;
 
         let usedOptionsForRequest;
         const requestStub = (options, callback) => {
@@ -37,11 +36,11 @@ describe('Reverse proxy', () => {
             callback(null, {statusCode: 200});
         };
 
-        const proxyMiddleware = _.partial(createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman')), proxyConfigWithValidPath);
+        const proxyMiddleware = createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman'), configWithValidPath);
         proxyMiddleware(request, response, testChecks);
 
         function testChecks() {
-            const expectedURL = proxyConfigWithValidPath.protectedServer.host + ':' + proxyConfigWithValidPath.protectedServer.port + request.url;
+            const expectedURL = configWithValidPath.proxy.protectedServer.host + ':' + configWithValidPath.proxy.protectedServer.port + request.url;
             usedOptionsForRequest.url.should.equal(expectedURL);
 
             usedOptionsForRequest.body.should.equal(request.body);
@@ -57,8 +56,8 @@ describe('Reverse proxy', () => {
         request.url = 'pppppp123';
         const regexpAsProtectedPath = /p*123/;
 
-        let proxyConfigWithValidPath = _.cloneDeep(proxyConfig);
-        proxyConfigWithValidPath.paths[0].path = regexpAsProtectedPath;
+        let configWithValidPath = _.cloneDeep(config);
+        configWithValidPath.proxy.paths[0].path = regexpAsProtectedPath;
 
         let usedOptionsForRequest;
         const requestStub = (options, callback) => {
@@ -66,13 +65,11 @@ describe('Reverse proxy', () => {
             callback(null, {statusCode: 200});
         };
 
-        const proxy = createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman'));
-
-        const proxyMiddleware = _.partial(proxy, proxyConfigWithValidPath);
-        proxyMiddleware(request, response, testChecks);
+        const proxy = createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman'), configWithValidPath);
+        proxy(request, response, testChecks);
 
         function testChecks () {
-            const expectedURL = proxyConfigWithValidPath.protectedServer.host + ':' + proxyConfigWithValidPath.protectedServer.port + request.url;
+            const expectedURL = configWithValidPath.proxy.protectedServer.host + ':' + configWithValidPath.proxy.protectedServer.port + request.url;
             usedOptionsForRequest.url.should.deep.equal(expectedURL);
 
             usedOptionsForRequest.body.should.deep.equal(request.body);
@@ -86,14 +83,14 @@ describe('Reverse proxy', () => {
             response = mockResponse();
         let responseSpy = sinon.spy(response, 'send');
 
-        let proxyConfigWithInvalidPath = _.cloneDeep(proxyConfig);
-        proxyConfigWithInvalidPath.paths[0].path = request.url + '-invalid';
+        let configWithInvalidPath = _.cloneDeep(config);
+        configWithInvalidPath.proxy.paths[0].path = request.url + '-invalid';
 
         const requestStub = (options, callback) => {
             callback(null, {statusCode: 200});
         };
 
-        const proxyMiddleware = _.partial(createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman')), proxyConfigWithInvalidPath);
+        const proxyMiddleware = createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman'), configWithInvalidPath);
         proxyMiddleware(request, response, testChecks);
 
         function testChecks () {
@@ -113,10 +110,10 @@ describe('Reverse proxy', () => {
 
         let requestMock = sinon.mock();
 
-        let proxyConfigWithValidPath = _.cloneDeep(proxyConfig);
-        proxyConfigWithValidPath.paths[0].path = request.url;
+        let configWithValidPath = _.cloneDeep(config);
+        configWithValidPath.proxy.paths[0].path = request.url;
 
-        const proxyMiddleware = _.partial(createProxyMiddleware(requestMock, createDecodeTokenStub('Ironman')), proxyConfigWithValidPath);
+        const proxyMiddleware = createProxyMiddleware(requestMock, createDecodeTokenStub('Ironman'), configWithValidPath);
         proxyMiddleware(request, response, testChecks);
 
         function testChecks () {
@@ -137,10 +134,10 @@ describe('Reverse proxy', () => {
 
         let requestMock = sinon.mock();
 
-        let proxyConfigWithInvalidPath = _.cloneDeep(proxyConfig);
-        proxyConfigWithInvalidPath.paths[0].path = request.url;
+        let configWithInvalidPath = _.cloneDeep(config);
+        configWithInvalidPath.proxy.paths[0].path = request.url;
 
-        const proxyMiddleware = _.partial(createProxyMiddleware(requestMock, createDecodeTokenStub('Ironman')), proxyConfigWithInvalidPath);
+        const proxyMiddleware = createProxyMiddleware(requestMock, createDecodeTokenStub('Ironman'), configWithInvalidPath);
         proxyMiddleware(request, response, testChecks);
 
         function testChecks () {
@@ -159,12 +156,12 @@ describe('Reverse proxy', () => {
         let request = mockRequest();
         request.headers.Authorization = 'Basic 73290128932';
 
-        let proxyConfigWithInvalidPath = _.cloneDeep(proxyConfig);
-        proxyConfigWithInvalidPath.paths[0].path = request.url;
+        let configWithInvalidPath = _.cloneDeep(config);
+        configWithInvalidPath.proxy.paths[0].path = request.url;
 
         let requestMock = sinon.mock();
 
-        const proxyMiddleware = _.partial(createProxyMiddleware(requestMock, createDecodeTokenStub('Ironman')), proxyConfigWithInvalidPath);
+        const proxyMiddleware = createProxyMiddleware(requestMock, createDecodeTokenStub('Ironman'), configWithInvalidPath);
         proxyMiddleware(request, response, testChecks);
 
         function testChecks () {
@@ -196,11 +193,11 @@ describe('Reverse proxy includes a header with the username', () => {
             callback(null, {statusCode: 200});
         };
 
-        let proxyConfigWithValidPath = _.cloneDeep(proxyConfig);
-        proxyConfigWithValidPath.paths[0].path = request.url;
+        let configWithValidPath = _.cloneDeep(config);
+        configWithValidPath.proxy.paths[0].path = request.url;
 
 
-        const proxyMiddleware = _.partial(createProxyMiddleware(requestStub, decodeTokenStub), proxyConfigWithValidPath);
+        const proxyMiddleware = createProxyMiddleware(requestStub, decodeTokenStub, configWithValidPath);
         proxyMiddleware(request, response, testChecks);
 
 
@@ -227,11 +224,11 @@ describe('Reverse proxy includes a header with the username', () => {
             callback();
         };
 
-        let proxyConfigWithValidPath = _.cloneDeep(proxyConfig);
-        proxyConfigWithValidPath.paths[0].path = request.url;
+        let configWithValidPath = _.cloneDeep(config);
+        configWithValidPath.proxy.paths[0].path = request.url;
 
 
-        const proxyMiddleware = _.partial(createProxyMiddleware(requestStub, decodeTokenStub), proxyConfigWithValidPath);
+        const proxyMiddleware = createProxyMiddleware(requestStub, decodeTokenStub, configWithValidPath);
         proxyMiddleware(request, response, testChecks);
 
 
@@ -256,8 +253,8 @@ describe('the reverse proxy returns the response from the protected server', () 
             response = mockResponse();
         let responseSpy = sinon.spy(response, 'send');
 
-        let proxyConfigWithValidPath = _.cloneDeep(proxyConfig);
-        proxyConfigWithValidPath.paths[0].path = request.url;
+        let configWithValidPath = _.cloneDeep(config);
+        configWithValidPath.proxy.paths[0].path = request.url;
 
         const  responseStub = {
             statusCode: 222
@@ -268,7 +265,7 @@ describe('the reverse proxy returns the response from the protected server', () 
             callback(null, responseStub, bodyStub);
         };
 
-        const proxyMiddleware = _.partial(createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman')), proxyConfigWithValidPath);
+        const proxyMiddleware = createProxyMiddleware(requestStub, createDecodeTokenStub('Ironman'), configWithValidPath);
         proxyMiddleware(request, response, testChecks);
 
 
@@ -288,7 +285,7 @@ describe('the reverse proxy returns the response from the protected server', () 
 
 
 
-function createProxyMiddleware(requestMock, decodeTokenStub) {
+function createProxyMiddleware(requestMock, decodeTokenStub, customConfig) {
     mockery.registerMock('request', requestMock);
     mockery.registerMock('./decodeToken', decodeTokenStub);
 
@@ -298,7 +295,7 @@ function createProxyMiddleware(requestMock, decodeTokenStub) {
         warnOnUnregistered: false
     });
 
-    return require('../../src/reverseProxy/proxy.js');
+    return require('../../src/reverseProxy/proxy.js')(customConfig);
 }
 
 function mockRequest () {

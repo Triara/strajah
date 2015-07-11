@@ -7,14 +7,12 @@ const modules = [
     require('./login')
 ];
 
-const reverseProxy = require('./reverseProxy');
-
-
 module.exports = registerServices;
 
-function registerServices(server, proxyCustomConfig) {
+function registerServices(server, customConfig) {
     modules.forEach(module => {
         module.registerIn(server);
     });
-    reverseProxy.registerIn(server, proxyCustomConfig);
+    const reverseProxy = require('./reverseProxy');
+    reverseProxy.registerIn(server, customConfig);
 }

@@ -5,8 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node --harmony src/index.js",
-    "test": "npm run-script mocha && npm run-script cucumber",
-    "mocha": "./node_modules/.bin/grunt mochacli",
+    "test": "node --harmony ./node_modules/.bin/grunt test",
+    "mocha": "node --harmony ./node_modules/.bin/grunt mochacli",
     "cucumber": "node --harmony node_modules/.bin/grunt cucumber"
   },
   "engine": {

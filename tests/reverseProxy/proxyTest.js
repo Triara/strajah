@@ -2,7 +2,7 @@
 
 const should = require('chai').should(),
     sinon = require('sinon'),
-    proxyConfig = require('../../src/reverseProxy/proxyConfig.js'),
+    proxyConfig = require('../../src/config.js').proxy,
     mockery = require('mockery'),
     _ = require('lodash');
 

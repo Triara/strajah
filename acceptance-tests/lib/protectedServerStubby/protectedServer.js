@@ -1,7 +1,7 @@
 'use strict';
 
 const restify = require('restify'),
-    proxyConfig = require('../../../src/reverseProxy/proxyConfig.js'),
+    proxyConfig = require('../../../src/config.js').proxy,
     _ = require('lodash');
 
 

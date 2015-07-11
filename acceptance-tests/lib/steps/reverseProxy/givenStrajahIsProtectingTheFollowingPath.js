@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require('../../../../src/reverseProxy/proxyConfig.js'),
+const config = require('../../../../src/config.js').proxy,
     _ = require('lodash');
 
 

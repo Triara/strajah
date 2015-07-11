@@ -1,7 +1,7 @@
 'use strict';
 
 const request = require('request'),
-    proxyConfig = require('./proxyConfig'),
+    proxyConfig = require('../config').proxy,
     decodeToken = require('./decodeToken'),
     _ = require('lodash');
 

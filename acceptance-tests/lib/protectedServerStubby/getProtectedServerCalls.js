@@ -1,6 +1,6 @@
 'use strict';
 
-const proxyConfig = require('../../../src/reverseProxy/proxyConfig.js'),
+const proxyConfig = require('../../../src/config.js').proxy,
     request = require('request');
 
 module.exports = callback => {

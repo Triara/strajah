@@ -32,7 +32,12 @@ module.exports = function (grunt) {
         'cucumberjs'
     ]);
 
-    grunt.registerTask('test', [
+    grunt.registerTask('mocha', [
         'mochacli'
+    ]);
+
+    grunt.registerTask('test', [
+        'mochacli',
+        'cucumberjs'
     ]);
 };

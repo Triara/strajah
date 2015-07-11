@@ -103,7 +103,7 @@ describe('Reverse proxy', () => {
 
     it('should not forward to protected paths if no \'Authorization\' header is provided', done => {
         const response = mockResponse();
-        let responseSpy = sinon.spy(response, 'send');
+        let responseSpy = sinon.spy(response, 'json');
 
         let request = mockRequest();
         delete request.headers.Authorization;
@@ -127,7 +127,7 @@ describe('Reverse proxy', () => {
 
     it('should not forward to protected paths if no bearer token is provided', done => {
         const response = mockResponse();
-        let responseSpy = sinon.spy(response, 'send');
+        let responseSpy = sinon.spy(response, 'json');
 
         let request = mockRequest();
         request.headers.Authorization = 'Bearer';
@@ -151,7 +151,7 @@ describe('Reverse proxy', () => {
 
     it('should not forward to protected paths if other type of authorization is provided', done => {
         const response = mockResponse();
-        let responseSpy = sinon.spy(response, 'send');
+        let responseSpy = sinon.spy(response, 'json');
 
         let request = mockRequest();
         request.headers.Authorization = 'Basic 73290128932';
@@ -211,7 +211,7 @@ describe('Reverse proxy includes a header with the username', () => {
     it('Should return a 401 if it was not possible to decode token', done => {
         const response = mockResponse(),
             request = mockRequest();
-        let responseSpy = sinon.spy(response, 'send');
+        let responseSpy = sinon.spy(response, 'json');
 
         const decodeTokenStub = () => {
             return {
@@ -318,7 +318,8 @@ function mockRequest () {
 
 function mockResponse() {
     return {
-        send: () => {}
+        send: () => {},
+        json: () => {}
     };
 }
 

@@ -14,13 +14,13 @@ function proxy(incomingRequest, response, next) {
 	const authorizationHeader = incomingRequest.header('Authorization');
 
 	if (_.isUndefined(authorizationHeader) || _.isUndefined(authorizationHeader.split(' ')[1]) || authorizationHeader.split(' ')[0].toLowerCase() !== 'bearer') {
-		response.send(401);
+		response.json(401, 'invalid authorization header');
 		return next();
 	}
 
 	const authorizationTokenSet = decodeToken(authorizationHeader.split(' ')[1]);
 	if (!_.isUndefined(authorizationTokenSet.error)) {
-		response.send(401);
+		response.json(401, 'invalid authorization token');
 		return next();
 	}
 

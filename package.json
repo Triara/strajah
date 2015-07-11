@@ -41,6 +41,6 @@
     "lodash": "3.1.0",
     "mongodb": "2.0.33",
     "request": "2.53.0",
-    "ciphertoken": "git://github.com/Triara/ciphertoken"
+    "strajah-token": "^2.0.3"
   }
 }

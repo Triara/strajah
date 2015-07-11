@@ -1,6 +1,6 @@
 'use strict';
 
-const ciphertoken = require('ciphertoken'),
+const ciphertoken = require('strajah-token'),
     _ = require('lodash'),
     config = require('../config');
 

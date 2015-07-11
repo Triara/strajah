@@ -1,6 +1,6 @@
 'use strict';
 
-const ciphertoken = require('ciphertoken'),
+const ciphertoken = require('strajah-token'),
     config = require('../config');
 
 const accessTokenCreator = ciphertoken({

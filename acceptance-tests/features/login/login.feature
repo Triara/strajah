@@ -17,7 +17,7 @@ Feature: Login
     Then the response code must be 401
 
 
-  Scenario: No registered customer tries to log in
+  Scenario: Registered customer tries to log in with invalid pass
     Given a registered customer with data
       | user name | password |
       | Ironman   | Av3ng3Rs |
